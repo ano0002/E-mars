@@ -2,11 +2,12 @@ import pygame
 import numpy as np
 
 class Tileset:
-    def __init__(self, file, tilesize=(16, 16)):
+    def __init__(self, file, tilesize=(32, 32)):
         self.file = file
         self.size = tilesize
-        self.image = pygame.image.load(file)
+        self.image = pygame.transform.scale2x(pygame.image.load(file))
         self.rect = self.image.get_rect()
+        
         self.tiles = []
         self.load()
     
@@ -33,16 +34,25 @@ class Map:
     def show_map(self,display):
         for i,line in enumerate(self.map):
             for j,item in enumerate(line):
-                display.blit(self.tileset.tiles[item], (j*16, i*16))
-    
+                display.blit(self.tileset.tiles[item], (j*self.tileset.size[0], i*self.tileset.size[1]))
+    def get_colliders(self):
+        colliders = []
+        for i,line in enumerate(self.map):
+            for j,item in enumerate(line):
+                if item != 111:
+                    colliders.append(pygame.Rect(j*self.tileset.size[0], i*self.tileset.size[1], self.tileset.size[0], self.tileset.size[1]))
+        return colliders
+
 if __name__ == '__main__':
     pygame.init()
-    display_width = 20*16
-    display_height = 30*16
+    display_width = 20*32
+    display_height = 30*32
     display = pygame.display.set_mode((display_width, display_height))
     tileset = Tileset('terrain.png')
     playing_area = Map('map.csv', tileset)
     playing_area.show_map(display)
+    for collider in playing_area.get_colliders():
+        pygame.draw.rect(display, (255, 0, 0), collider, 1)
     pygame.display.update()
     while True:
         for event in pygame.event.get():
