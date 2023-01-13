@@ -3,14 +3,14 @@ import pygame,math
 
 
 class Player():
-    def __init__(self,tilemap) -> None:
-        self.image = pygame.transform.scale(pygame.image.load('player.png'), (32, 64))
+    def __init__(self,tilemap,position = (400,200)) -> None:
+        self.image = pygame.transform.scale(pygame.image.load('./assets/player.png'), (32, 64))
         self.rect = self.image.get_rect()
-        self.rect.x = 400
-        self.rect.y = 200
+        self.rect.x = position[0]
+        self.rect.y = position[1]
         self.velocity = [0, 0]
         self.gravity = 0.5
-        self.gun = pygame.transform.scale(pygame.image.load('gun.png'), (25, 25))
+        self.gun = pygame.transform.scale(pygame.image.load('./assets/gun.png'), (25, 25))
         self.max_bullets = 3
         self.bullets = self.max_bullets
         self.tilemap = tilemap
@@ -102,8 +102,8 @@ if __name__ == "__main__":
     display = pygame.display.set_mode((40*16, 60*16))
     clock = pygame.time.Clock()
     
-    tileset = Tileset('terrain.png')
-    playing_area = Map('map.csv', tileset,offset=[0,60])
+    tileset = Tileset('./tiled_map/terrain.png')
+    playing_area = Map('./tiled_map/map.csv', tileset,offset=[0,60])
     player = Player(playing_area)
     
     
