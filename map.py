@@ -53,8 +53,8 @@ if __name__ == '__main__':
     display_width = 40*16
     display_height = 60*16
     display = pygame.display.set_mode((display_width, display_height))
-    tileset = Tileset('terrain.png')
-    playing_area = Map('map.csv', tileset,offset=[0,60])
+    tileset = Tileset('./tiled_map/terrain.png')
+    playing_area = Map('./tiled_map/map.csv', tileset,offset=[0,60])
     playing_area.show_map(display)
     for collider in playing_area.get_colliders(display):
         pygame.draw.rect(display, (255, 0, 0), collider, 1)
