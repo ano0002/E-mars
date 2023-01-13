@@ -3,8 +3,8 @@ import pygame,math
 
 
 class Player():
-    def __init__(self) -> None:
-        self.image = pygame.transform.scale(pygame.image.load('player.png'), (50, 50))
+    def __init__(self,tilemap) -> None:
+        self.image = pygame.transform.scale(pygame.image.load('player.png'), (32, 64))
         self.rect = self.image.get_rect()
         self.rect.x = 400
         self.rect.y = 200
@@ -13,6 +13,7 @@ class Player():
         self.gun = pygame.transform.scale(pygame.image.load('gun.png'), (25, 25))
         self.max_bullets = 3
         self.bullets = self.max_bullets
+        self.tilemap = tilemap
         self.rects = {
             "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
             "bottom":pygame.Rect(self.rect.centerx-5,self.rect.bottom,10,1),
@@ -21,9 +22,20 @@ class Player():
             "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
             "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
         }
-    def update(self,colliders):
+    def update(self,display):
         
         self.rect.move_ip(self.velocity)
+        self.velocity[0] = round(self.velocity[0] * 0.9,3)
+        
+        if self.rect.bottom <= 0:
+            self.rect.y += 60*16
+            self.tilemap.offset[1] -= 60
+        if self.rect.top >= 30*32:
+            self.rect.move_ip((0,-(60*16)))
+            self.tilemap.offset[1] += 60
+        
+        self.velocity[1] += self.gravity
+        
         self.rects = {
             "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
             "bottom":pygame.Rect(self.rect.centerx-5,self.rect.bottom,10,1),
@@ -32,14 +44,9 @@ class Player():
             "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
             "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
         }
-        self.velocity[0] = round(self.velocity[0] * 0.9,3)
         
-        if not self.rect.bottom>=30*32:
-            self.velocity[1] += self.gravity
-        else:
-            self.rect.bottom = 30*32
-            self.velocity[1] = 0
-            self.bullets = self.max_bullets
+        colliders = self.tilemap.get_colliders(display)
+        
         if self.rects["bottom"].collidelist(colliders) != -1 and (self.rects["bottom-left"].collidelist(colliders) != -1 or self.rects["bottom-right"].collidelist(colliders) != -1):
             self.velocity[1] = 0
             self.bullets = self.max_bullets
@@ -53,6 +60,7 @@ class Player():
                     "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
                     "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
                 }
+            
         elif self.rects["top"].collidelist(colliders) != -1:
             self.velocity[1] = self.gravity*2
         
@@ -91,12 +99,12 @@ if __name__ == "__main__":
     from map import Map,Tileset
     
     pygame.init()
-    display = pygame.display.set_mode((20*32, 30*32))
-    player = Player()
+    display = pygame.display.set_mode((40*16, 60*16))
     clock = pygame.time.Clock()
     
     tileset = Tileset('terrain.png')
-    playing_area = Map('map.csv', tileset)
+    playing_area = Map('map.csv', tileset,offset=[0,60])
+    player = Player(playing_area)
     
     
     while True:
@@ -109,12 +117,12 @@ if __name__ == "__main__":
                     player.velocity[1] = -10
             if event.type == pygame.MOUSEBUTTONDOWN:
                 player.shoot(mouse_pos=pygame.mouse.get_pos(),power=10)
-        player.update(playing_area.get_colliders())
+        player.update(display)
         display.fill((0,0,0))
         playing_area.show_map(display)
         for rect in player.rects.values():
             pygame.draw.rect(display,(0,255,0),rect,1)
-        for collider in playing_area.get_colliders():
+        for collider in playing_area.get_colliders(display):
             pygame.draw.rect(display,(255,0,0),collider,1)
         player.draw(display)
         pygame.display.update()
