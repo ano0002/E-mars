@@ -26,17 +26,6 @@ def solve_ik(i, endpoint, target):
 
     return current_point + (endpoint-current_point).rotate(angle)
 
-def render():
-    black = 0, 0, 0
-    white = 255, 255, 255
-
-    screen.fill(white)
-    for i in range(1, len(points)):
-        prev = points[i-1]
-        cur = points[i]
-        pygame.draw.aaline(screen, black, prev, cur)
-    pygame.display.flip()
-
 clock = pygame.time.Clock()
 gun = pygame.transform.scale(pygame.image.load('./assets/gun.png'), (25, 25))
 
