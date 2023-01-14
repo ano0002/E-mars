@@ -3,7 +3,14 @@ from player import Player
 from map import Map,Tileset
 
 pygame.init()
-display = pygame.display.set_mode((40*16, 60*16))
+
+
+pygame.display.set_caption('E-Mars')
+
+#set the display to full screen
+
+
+display = pygame.display.set_mode((40*16, 60*16),pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 
 tileset = Tileset('./tiled_map/terrain.png')

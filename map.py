@@ -1,5 +1,4 @@
 import pygame
-import numpy as np
 
 class Tileset:
     def __init__(self, file, tilesize=(16, 16)):
