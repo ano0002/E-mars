@@ -16,7 +16,7 @@ class Player():
         self.tilemap = tilemap
         self.rects = {
             "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
-            "bottom":pygame.Rect(self.rect.centerx-5,self.rect.bottom,10,1),
+            "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1),
             "bottom-left":pygame.Rect(self.rect.x,self.rect.bottom,1,1),
             "bottom-right":pygame.Rect(self.rect.right,self.rect.bottom,1,1),
             "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
@@ -38,7 +38,7 @@ class Player():
         
         self.rects = {
             "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
-            "bottom":pygame.Rect(self.rect.centerx-5,self.rect.bottom,10,1),
+            "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1),
             "bottom-left":pygame.Rect(self.rect.x,self.rect.bottom,1,1),
             "bottom-right":pygame.Rect(self.rect.right,self.rect.bottom,1,1),
             "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
@@ -54,7 +54,7 @@ class Player():
                 self.rect.move_ip(0,-1)
                 self.rects = {
                     "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
-                    "bottom":pygame.Rect(self.rect.centerx-5,self.rect.bottom,10,1),
+                    "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1),
                     "bottom-left":pygame.Rect(self.rect.x,self.rect.bottom,1,1),
                     "bottom-right":pygame.Rect(self.rect.right,self.rect.bottom,1,1),
                     "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
@@ -70,9 +70,9 @@ class Player():
             self.velocity[0] = -abs(self.velocity[0])
         
         if self.rects["bottom-left"].collidelist(colliders) != -1 and not self.rects["bottom"].collidelist(colliders) != -1:
-            self.velocity[0] = 4
+            self.velocity[0] = self.velocity[1]
         if self.rects["bottom-right"].collidelist(colliders) != -1 and not self.rects["bottom"].collidelist(colliders) != -1:
-            self.velocity[0] = -4
+            self.velocity[0] = -self.velocity[1]
         
             
     def draw(self, screen):
