@@ -68,7 +68,6 @@ class Particle_Emitter:
 if __name__ == '__main__':
     import pygame,random
 
-# Setup pygame/window ---------------------------------------- #
     mainClock = pygame.time.Clock()
     from pygame.locals import *
     pygame.init()

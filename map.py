@@ -43,7 +43,7 @@ class Map:
         display_tile_height = display.get_rect().height // self.tileset.size[1]
         for i,line in enumerate(self.map[self.offset[1]:self.offset[1]+display_tile_height]):
             for j,item in enumerate(line[self.offset[0]:self.offset[0]+display_tile_width]):
-                if item not in (111,23):
+                if item not in (111,23,66):
                     colliders.append(pygame.Rect(j*self.tileset.size[0], i*self.tileset.size[1], self.tileset.size[0], self.tileset.size[1]))
         return colliders
 
