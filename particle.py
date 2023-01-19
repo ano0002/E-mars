@@ -32,15 +32,15 @@ class Particle:
     
     def draw(self,screen):
         if self.glow_radius > 0:
-            surf = circle_surf(self.glow_radius, list(x*0.2 for x in self.color))
-            screen.blit(surf, (self.pos[0]-self.glow_radius, self.pos[1]-self.glow_radius), special_flags=pygame.BLEND_RGB_ADD)
+            surf = circle_surf(self.glow_radius, list(x*0.4 for x in self.color))
+            screen.blit(surf, (self.pos[0]-self.glow_radius, self.pos[1]-self.glow_radius), special_flags=pygame.BLEND_ADD)
         pygame.draw.circle(screen, self.color, self.pos, self.radius)
 
 class Particle_Emitter:
     def __init__(self, rate, pos, vel, color = (255,255,255), radius = 5, gravity = 0.1,timer=50,glow_radius=0):
         self.rate = rate
         self.pos = pos
-        self.vel = vel
+        self.vel = list(vel)
         self.color = color
         self.radius = radius
         self.gravity = gravity
@@ -51,9 +51,13 @@ class Particle_Emitter:
         
     def update(self):
         self.frame += 1
-        self.vel[0] = random.random()*4-2
+        vel = self.vel.copy()
+        if hasattr(self.vel[0],"__call__"):
+            vel[0] = self.vel[0]()
+        if hasattr(self.vel[1],"__call__"):
+            vel[1] = self.vel[1]()
         if self.frame % self.rate == 0:
-            self.particles.append(Particle(self.pos, self.vel, self.timer, self.color, self.radius, self.gravity, self.glow_radius))
+            self.particles.append(Particle(self.pos, Vector2(vel), self.timer, self.color, self.radius, self.gravity, self.glow_radius))
         
         for particle in self.particles:
             particle.update()
@@ -74,7 +78,7 @@ if __name__ == '__main__':
     pygame.display.set_caption('game base')
     screen = pygame.display.set_mode((500, 500),0,32)
 
-    emitter = Particle_Emitter(rate = 10, pos = Vector2(250, 250), vel = Vector2(1, -5),timer = 50,glow_radius=15,color=(255,0,0))
+    emitter = Particle_Emitter(rate = 4, pos = Vector2(250, 250), vel = (lambda : random.random()*5-2.5, -5),timer = 50,glow_radius=15,color=(255,0,0))
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -82,7 +86,7 @@ if __name__ == '__main__':
                 exit()
         emitter.update()
         emitter.pos = pygame.mouse.get_pos()
-        screen.fill((0,0,0))
+        screen.fill((0,200,70))
         emitter.draw(screen)
         pygame.display.update()
         mainClock.tick(60)
