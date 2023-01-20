@@ -85,8 +85,8 @@ class Player():
                 }
         if self.rects["right"].collidelist(colliders) != -1 or self.rect.right>=20*32 :
             self.velocity[0] = -abs(self.velocity[0])
-            if self.rect.x >=20*32 :
-                self.rect.x = 20*32
+            if self.rect.right >=20*32 :
+                self.rect.right = 20*32
                 self.rects = {
                     "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
                     "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1),
