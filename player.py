@@ -145,6 +145,10 @@ class Bullet():
             self.player.bullets.remove(self)
         if self.rect.bottom <= 0:
             self.player.bullets.remove(self)
+        if self.rect.right >= 40*16:
+            self.player.bullets.remove(self)
+        if self.rect.x <= 0:
+            self.player.bullets.remove(self)
         colliders = self.map.get_colliders(display)
         interactibles = self.map.get_interactibles(display)
         if self.rect.collidelist(interactibles) != -1:
