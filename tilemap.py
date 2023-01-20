@@ -65,7 +65,7 @@ class Map:
     def shot(self,rect,player,display):
         pos = list(map(int,Vector2(rect.center)//16))
         print(pos)
-        if self.map[pos[1]+self.offset[1]][pos[0]+self.offset[0]] in 181:
+        if self.map[pos[1]+self.offset[1]][pos[0]+self.offset[0]] in (181,203,225):
             self.map[pos[1]+self.offset[1]][pos[0]+self.offset[0]] = 111
 
 

@@ -50,7 +50,7 @@ class Player():
         
         interactibles = self.tilemap.get_interactibles(display)
         if self.rect.collidelist(interactibles) != -1:
-            self.map.interact(interactibles[self.rect.collidelist(interactibles)],self.player,display)
+            self.tilemap.interact(interactibles[self.rect.collidelist(interactibles)],self,display)
             
         colliders = self.tilemap.get_colliders(display)
         
@@ -73,9 +73,28 @@ class Player():
         
         if self.rects["left"].collidelist(colliders) != -1 or self.rect.x <=0 :
             self.velocity[0] = abs(self.velocity[0])
+            if self.rect.x <=0 :
+                self.rect.x = 0
+                self.rects = {
+                    "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
+                    "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1),
+                    "bottom-left":pygame.Rect(self.rect.x,self.rect.bottom,1,1),
+                    "bottom-right":pygame.Rect(self.rect.right,self.rect.bottom,1,1),
+                    "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
+                    "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
+                }
         if self.rects["right"].collidelist(colliders) != -1 or self.rect.right>=20*32 :
             self.velocity[0] = -abs(self.velocity[0])
-        
+            if self.rect.x >=20*32 :
+                self.rect.x = 20*32
+                self.rects = {
+                    "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
+                    "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1),
+                    "bottom-left":pygame.Rect(self.rect.x,self.rect.bottom,1,1),
+                    "bottom-right":pygame.Rect(self.rect.right,self.rect.bottom,1,1),
+                    "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
+                    "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
+                }
         if self.rects["bottom-left"].collidelist(colliders) != -1 and not self.rects["bottom"].collidelist(colliders) != -1:
             self.velocity[0] = self.velocity[1]
         if self.rects["bottom-right"].collidelist(colliders) != -1 and not self.rects["bottom"].collidelist(colliders) != -1:
@@ -84,6 +103,7 @@ class Player():
         for bullet in self.bullets:
             bullet.update(display)
             
+        
     def draw(self, screen):
         screen.blit(self.image, self.rect)
         pos = pygame.mouse.get_pos()
