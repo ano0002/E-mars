@@ -1,4 +1,5 @@
 import pygame
+from pygame.math import Vector2
 
 class Tileset:
     def __init__(self, file, tilesize=(16, 16)):
@@ -37,6 +38,7 @@ class Map:
         for i,line in enumerate(self.map[self.offset[1]:self.offset[1]+display_tile_height]):
             for j,item in enumerate(line[self.offset[0]:self.offset[0]+display_tile_width]):
                 display.blit(self.tileset.tiles[item], (j*self.tileset.size[0], i*self.tileset.size[1]))
+    
     def get_colliders(self,display):
         colliders = []
         display_tile_width = display.get_rect().width // self.tileset.size[0]
@@ -46,6 +48,26 @@ class Map:
                 if item not in (111,23,66):
                     colliders.append(pygame.Rect(j*self.tileset.size[0], i*self.tileset.size[1], self.tileset.size[0], self.tileset.size[1]))
         return colliders
+    
+    def get_interactibles(self,display):
+        colliders = []
+        display_tile_width = display.get_rect().width // self.tileset.size[0]
+        display_tile_height = display.get_rect().height // self.tileset.size[1]
+        for i,line in enumerate(self.map[self.offset[1]:self.offset[1]+display_tile_height]):
+            for j,item in enumerate(line[self.offset[0]:self.offset[0]+display_tile_width]):
+                if item in (181,203,225):
+                    colliders.append(pygame.Rect(j*self.tileset.size[0], i*self.tileset.size[1], self.tileset.size[0], self.tileset.size[1]))
+        return colliders
+
+    def interact(self,rect,player,display):
+        pass
+    
+    def shot(self,rect,player,display):
+        pos = list(map(int,Vector2(rect.center)//16))
+        print(pos)
+        if self.map[pos[1]+self.offset[1]][pos[0]+self.offset[0]] in 181:
+            self.map[pos[1]+self.offset[1]][pos[0]+self.offset[0]] = 111
+
 
 if __name__ == '__main__':
     pygame.init()
@@ -71,4 +93,6 @@ if __name__ == '__main__':
         playing_area.show_map(display)
         for collider in playing_area.get_colliders(display):
             pygame.draw.rect(display, (255, 0, 0), collider, 1)
+        for collider in playing_area.get_interactibles(display):
+            pygame.draw.rect(display, (0, 0, 255), collider, 1)
         pygame.display.update()

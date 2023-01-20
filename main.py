@@ -1,6 +1,6 @@
 import pygame
 from player import Player
-from map import Map,Tileset
+from tilemap import Map,Tileset
 
 pygame.init()
 

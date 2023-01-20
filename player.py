@@ -2,6 +2,7 @@ import pygame,math
 from particle import Particle_Emitter
 from pygame.math import Vector2
 import random
+
 class Player():
     def __init__(self,tilemap,position = (400,200)) -> None:
         self.image = pygame.transform.scale(pygame.image.load('./assets/player.png'), (32, 64))
@@ -47,6 +48,10 @@ class Player():
             "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
         }
         
+        interactibles = self.tilemap.get_interactibles(display)
+        if self.rect.collidelist(interactibles) != -1:
+            self.map.interact(interactibles[self.rect.collidelist(interactibles)],self.player,display)
+            
         colliders = self.tilemap.get_colliders(display)
         
         if self.rects["bottom"].collidelist(colliders) != -1 and (self.rects["bottom-left"].collidelist(colliders) != -1 or self.rects["bottom-right"].collidelist(colliders) != -1):
@@ -121,6 +126,9 @@ class Bullet():
         if self.rect.bottom <= 0:
             self.player.bullets.remove(self)
         colliders = self.map.get_colliders(display)
+        interactibles = self.map.get_interactibles(display)
+        if self.rect.collidelist(interactibles) != -1:
+            self.map.shot(interactibles[self.rect.collidelist(interactibles)],self.player,display)
         if self.rect.collidelist(colliders) != -1:
             self.player.bullets.remove(self)
         self.emitter.update()
@@ -130,7 +138,7 @@ class Bullet():
         self.emitter.draw(screen)
 
 if __name__ == "__main__":
-    from map import Map,Tileset
+    from tilemap import Map,Tileset
     
     pygame.init()
     display = pygame.display.set_mode((40*16, 60*16))
@@ -158,6 +166,8 @@ if __name__ == "__main__":
             pygame.draw.rect(display,(0,255,0),rect,1)
         for collider in playing_area.get_colliders(display):
             pygame.draw.rect(display,(255,0,0),collider,1)
+        for collider in playing_area.get_interactibles(display):
+            pygame.draw.rect(display, (0, 0, 255), collider, 1)
         player.draw(display)
         pygame.display.update()
         clock.tick(60)
