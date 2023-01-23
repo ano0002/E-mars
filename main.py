@@ -9,13 +9,16 @@ pygame.display.set_caption('E-Mars')
 
 #set the display to full screen
 
+tileset = Tileset('./tiled_map/terrain.png')
+playing_area = Map('./tiled_map/map', tileset,offset=[0,0], size=[80,45])
+player = Player(playing_area)
 
-display = pygame.display.set_mode((40*16, 60*16),pygame.FULLSCREEN)
+display_width = playing_area.width*16
+display_height = playing_area.height*16
+display = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
+
 clock = pygame.time.Clock()
 
-tileset = Tileset('./tiled_map/terrain.png')
-playing_area = Map('./tiled_map/map.csv', tileset,offset=[0,60])
-player = Player(playing_area,position=[20*16,45*16])
 
 
 while True:

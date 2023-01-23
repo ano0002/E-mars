@@ -31,11 +31,11 @@ class Player():
         self.velocity[0] = round(self.velocity[0] * 0.9,3)
         
         if self.rect.bottom <= 0:
-            self.rect.y += 60*16
-            self.tilemap.offset[1] -= 60
-        if self.rect.top >= 30*32:
-            self.rect.move_ip((0,-(60*16)))
-            self.tilemap.offset[1] += 60
+            self.rect.y += self.tilemap.height*16
+            self.tilemap.offset[1] -= self.tilemap.height
+        if self.rect.top >= self.tilemap.height*16 :
+            self.rect.move_ip((0,-(self.tilemap.height*16)))
+            self.tilemap.offset[1] += self.tilemap.height
         
         self.velocity[1] += self.gravity
         
@@ -83,10 +83,10 @@ class Player():
                     "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
                     "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
                 }
-        if self.rects["right"].collidelist(colliders) != -1 or self.rect.right>=20*32 :
+        if self.rects["right"].collidelist(colliders) != -1 or self.rect.right>=self.tilemap.width*16  :
             self.velocity[0] = -abs(self.velocity[0])
-            if self.rect.right >=20*32 :
-                self.rect.right = 20*32
+            if self.rect.right >=self.tilemap.width*16 :
+                self.rect.right = self.tilemap.width*16 
                 self.rects = {
                     "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
                     "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1),
@@ -131,46 +131,41 @@ class Bullet():
         self.rect = pygame.Rect(player.rect.centerx,player.rect.centery,power/2,power/2)
         self.velocity = velocity
         self.gravity = 0.5
-        self.emitter = Particle_Emitter(1,self.rect.center,
-                                        (lambda:velocity[0]*-0.1+random.random()*3-1.5,lambda:velocity[1]*-0.1+random.random()*3-1.5),
-                                        color=(60,60,0),
-                                        gravity=0,
-                                        radius=power/4,
-                                        timer=power/4)
     
     def update(self,display):
         self.rect.move_ip(self.velocity)
-        self.emitter.pos = self.rect.center
-        if self.rect.bottom >= 60*16:
-            self.player.bullets.remove(self)
-        if self.rect.bottom <= 0:
-            self.player.bullets.remove(self)
-        if self.rect.right >= 40*16:
-            self.player.bullets.remove(self)
-        if self.rect.x <= 0:
-            self.player.bullets.remove(self)
         colliders = self.map.get_colliders(display)
         interactibles = self.map.get_interactibles(display)
-        if self.rect.collidelist(interactibles) != -1:
-            self.map.shot(interactibles[self.rect.collidelist(interactibles)],self.player,display)
-        if self.rect.collidelist(colliders) != -1:
+        if self.rect.bottom >= self.map.height*16:
             self.player.bullets.remove(self)
-        self.emitter.update()
+        elif self.rect.bottom <= 0:
+            self.player.bullets.remove(self)
+        elif self.rect.right >= self.map.width*16:
+            self.player.bullets.remove(self)
+        elif self.rect.x <= 0:
+            self.player.bullets.remove(self)
+        elif self.rect.collidelist(interactibles) != -1:
+            self.map.shot(interactibles[self.rect.collidelist(interactibles)],self.player,display)
+        elif self.rect.collidelist(colliders) != -1:
+            self.player.bullets.remove(self)
         
     def draw(self,screen):
         pygame.draw.circle(screen,(255,255,0),(self.rect.x,self.rect.y),self.rect.width/2)
-        self.emitter.draw(screen)
 
 if __name__ == "__main__":
     from tilemap import Map,Tileset
     
     pygame.init()
-    display = pygame.display.set_mode((40*16, 60*16))
-    clock = pygame.time.Clock()
     
     tileset = Tileset('./tiled_map/terrain.png')
-    playing_area = Map('./tiled_map/map.csv', tileset,offset=[0,60])
+    playing_area = Map('./tiled_map/map', tileset,offset=[0,0], size=[80,45])
     player = Player(playing_area)
+    
+    display_width = playing_area.width*16
+    display_height = playing_area.height*16
+    display = pygame.display.set_mode((display_width, display_height))
+    clock = pygame.time.Clock()
+    
     
     
     while True:
