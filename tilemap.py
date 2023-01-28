@@ -105,7 +105,7 @@ class Map:
         pos = list(map(int,Vector2(rect.center)//16))
         if self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] in (67,0):
             player.power =15
-    
+            self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] = 111
     def shot(self,rect,player,display):
         pos = list(map(int,Vector2(rect.center)//16))
         if self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] in (181,203,225):
