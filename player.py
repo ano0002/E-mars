@@ -10,7 +10,7 @@ class Player():
         self.velocity = [0, 0]
         self.gravity = 0.5
         self.gun = pygame.transform.scale(pygame.image.load('./assets/gun.png'), (25, 25))
-        self.max_bullets = 3
+        self.max_bullets = 2
         self.bullet_count = self.max_bullets
         self.bullets = []
         self.tilemap = tilemap
@@ -36,7 +36,7 @@ class Player():
             "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
             "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
         }
-        for i in range(int(abs(self.velocity[1])//8)):
+        for _ in range(int(abs(self.velocity[1])//8)):
             colliders = self.tilemap.get_colliders(display)
             if  self.rects["bottom"].collidelist(colliders)!=-1:
                 self.tilemap.offset -= Vector2(0,0.5)
