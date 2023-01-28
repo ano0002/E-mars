@@ -86,7 +86,7 @@ if __name__ == '__main__':
                 exit()
         emitter.update()
         emitter.pos = pygame.mouse.get_pos()
-        screen.fill((0,200,70))
+        screen.fill((0,0,0))
         emitter.draw(screen)
         pygame.display.update()
         mainClock.tick(60)

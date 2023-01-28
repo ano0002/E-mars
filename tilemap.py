@@ -44,6 +44,7 @@ class Map:
                             temp[index] = backline[index]
                     self.map.append(temp)
                 
+        
     @property
     def offset(self):
         return self._offset
@@ -60,9 +61,9 @@ class Map:
         self.frame += 1
         display_tile_width = display.get_rect().width // self.tileset.width
         display_tile_height = display.get_rect().height // self.tileset.height
-        bottom = round(self.offset[1]+display_tile_height+0.5)
+        bottom = round(self.offset[1]+0.5)+display_tile_height
         top = int(self.offset[1])
-        right = round(self.offset[0]+display_tile_width+0.5)
+        right = round(self.offset[0]+0.5)+display_tile_width
         left = int(self.offset[0])
         y_offset = self.offset[1]%1*self.tileset.height
         x_offset = self.offset[0]%1*self.tileset.height
@@ -71,11 +72,14 @@ class Map:
             for j,item in enumerate(line[left:right]):
                 if item  ==  67:                    
                     display.blit(self.tileset.tiles[23], (j*self.tileset.width+x_offset, i*self.tileset.height-y_offset))
-                    collectibles.append({"pos":(j,i),"tile":self.tileset.tiles[67]})
+                    collectibles.append({"pos":(j*self.tileset.width,i*self.tileset.height),"tile":self.tileset.tiles[67]})
                 else:
-                    display.blit(self.tileset.tiles[item], (j*self.tileset.width+x_offset, i*self.tileset.height-y_offset))
+                    display.blit(self.tileset.tiles[item],
+                                 (j*self.tileset.width+x_offset,i*self.tileset.height-y_offset))
         for collectible in collectibles:
-            display.blit(pygame.transform.scale2x(collectible["tile"]), (collectible["pos"][0]*self.tileset.width+x_offset-self.tileset.height/2, collectible["pos"][1]*self.tileset.height-y_offset-self.tileset.height+abs(self.frame%90-45)*0.15))
+            effect= abs(self.frame%90-45)*0.15
+            display.blit(pygame.transform.scale(collectible["tile"],(32,32)), (collectible["pos"][0]+x_offset-self.tileset.height/2, collectible["pos"][1]-y_offset-self.tileset.height+effect))
+    
     def get_colliders(self,display):
         colliders = []
         display_tile_width = display.get_rect().width // self.tileset.width
@@ -88,7 +92,7 @@ class Map:
         x_offset = self.offset[0]%1*self.tileset.height
         for i,line in enumerate(self.map[top:bottom]):
             for j,item in enumerate(line[left:right]):
-                if item not in (111,23,66,29,117,67):
+                if item not in (111,23,66,29,117,67,205):
                     colliders.append(pygame.Rect(j*self.tileset.width-x_offset, i*self.tileset.height-y_offset, self.tileset.width, self.tileset.height))
         return colliders
     

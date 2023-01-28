@@ -1,7 +1,5 @@
 import pygame,math
-from particle import Particle_Emitter
 from pygame.math import Vector2
-import random
 
 class Player():
     def __init__(self,tilemap,position = (400,200)) -> None:
@@ -29,17 +27,6 @@ class Player():
     def update(self,display):
         
         self.rect.move_ip(self.velocity[0],0)
-        self.tilemap.offset += Vector2(0,self.velocity[1]/16)
-        self.velocity[0] = round(self.velocity[0] * 0.9,3)
-        
-        if self.rect.bottom <= 0:
-            self.rect.y += self.tilemap.height*16
-            self.tilemap.offset -= Vector2(0,self.tilemap.height)
-        if self.rect.top >= self.tilemap.height*16 :
-            self.rect.move_ip((0,-(self.tilemap.height*16)))
-            self.tilemap.offset += Vector2(0,self.tilemap.height)
-            
-        self.velocity[1] += self.gravity
         
         self.rects = {
             "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
@@ -49,6 +36,27 @@ class Player():
             "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
             "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
         }
+        for i in range(int(abs(self.velocity[1])//8)):
+            colliders = self.tilemap.get_colliders(display)
+            if  self.rects["bottom"].collidelist(colliders)!=-1:
+                self.tilemap.offset -= Vector2(0,0.5)
+                print("break")  
+                break
+            if self.velocity[1] > 0:
+                self.tilemap.offset += Vector2(0,0.5)
+            else:
+                self.tilemap.offset -= Vector2(0,0.5)
+        
+        if self.velocity[1] > 0:
+            self.tilemap.offset += Vector2(0,self.velocity[1]%8/16)
+        else:
+            self.tilemap.offset -= Vector2(0,abs(self.velocity[1])%8/16)
+                
+        self.velocity[0] = round(self.velocity[0] * 0.9,3)
+        
+            
+        self.velocity[1] += self.gravity
+        
         
         interactibles = self.tilemap.get_interactibles(display)
         if self.rect.collidelist(interactibles) != -1:
@@ -78,6 +86,7 @@ class Player():
                     "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
                     "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
                 }
+                
         if self.rects["right"].collidelist(colliders) != -1 or self.rect.right>=self.tilemap.width*16  :
             self.velocity[0] = -abs(self.velocity[0])
             if self.rect.right >=self.tilemap.width*16 :
@@ -90,10 +99,12 @@ class Player():
                     "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
                     "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
                 }
+                
         if self.rects["bottom-left"].collidelist(colliders) != -1 and not self.rects["bottom"].collidelist(colliders) != -1:
             self.velocity[0] = self.velocity[1]
         if self.rects["bottom-right"].collidelist(colliders) != -1 and not self.rects["bottom"].collidelist(colliders) != -1:
             self.velocity[0] = -self.velocity[1]
+        
         
         for bullet in self.bullets:
             bullet.update(display)
@@ -172,7 +183,7 @@ if __name__ == "__main__":
                 exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    player.velocity[1] = -10
+                    player.velocity[1] = -16
             if event.type == pygame.MOUSEBUTTONDOWN:
                 player.shoot(mouse_pos=pygame.mouse.get_pos())
         player.update(display)
