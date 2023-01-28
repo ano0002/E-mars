@@ -16,6 +16,7 @@ class Player():
         self.bullet_count = self.max_bullets
         self.bullets = []
         self.tilemap = tilemap
+        self.power = 10
         self.rects = {
             "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
             "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1), 
@@ -27,16 +28,17 @@ class Player():
         
     def update(self,display):
         
-        self.rect.move_ip(self.velocity)
+        self.rect.move_ip(self.velocity[0],0)
+        self.tilemap.offset += Vector2(0,self.velocity[1]/16)
         self.velocity[0] = round(self.velocity[0] * 0.9,3)
         
         if self.rect.bottom <= 0:
             self.rect.y += self.tilemap.height*16
-            self.tilemap.offset[1] -= self.tilemap.height
+            self.tilemap.offset -= Vector2(0,self.tilemap.height)
         if self.rect.top >= self.tilemap.height*16 :
             self.rect.move_ip((0,-(self.tilemap.height*16)))
-            self.tilemap.offset[1] += self.tilemap.height
-        
+            self.tilemap.offset += Vector2(0,self.tilemap.height)
+            
         self.velocity[1] += self.gravity
         
         self.rects = {
@@ -58,15 +60,8 @@ class Player():
             self.velocity[1] = 0
             self.bullet_count = self.max_bullets
             while self.rects["bottom"].collidelist(colliders) != -1:
-                self.rect.move_ip(0,-1)
-                self.rects = {
-                    "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
-                    "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1),
-                    "bottom-left":pygame.Rect(self.rect.x,self.rect.bottom,1,1),
-                    "bottom-right":pygame.Rect(self.rect.right,self.rect.bottom,1,1),
-                    "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
-                    "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
-                }
+                self.tilemap.offset -= (0,1/16)
+                colliders = self.tilemap.get_colliders(display)
         
         elif self.rects["top"].collidelist(colliders) != -1:
             self.velocity[1] = self.gravity*2
@@ -114,7 +109,8 @@ class Player():
         for bullet in self.bullets:
             bullet.draw(screen)
         
-    def shoot(self,mouse_pos,power):
+    def shoot(self,mouse_pos):
+        power = self.power
         if self.bullet_count>0:
             self.bullet_count -= 1
         else:
@@ -133,7 +129,7 @@ class Bullet():
         self.gravity = 0.5
     
     def update(self,display):
-        self.rect.move_ip(self.velocity)
+        self.rect.move_ip(self.velocity[0],self.velocity[1])
         colliders = self.map.get_colliders(display)
         interactibles = self.map.get_interactibles(display)
         if self.rect.bottom >= self.map.height*16:
@@ -164,6 +160,7 @@ if __name__ == "__main__":
     display_width = playing_area.width*16
     display_height = playing_area.height*16
     display = pygame.display.set_mode((display_width, display_height))
+    player.rect.center = (display_width/2,2*display_height/3)
     clock = pygame.time.Clock()
     
     
@@ -177,7 +174,7 @@ if __name__ == "__main__":
                 if event.key == pygame.K_SPACE:
                     player.velocity[1] = -10
             if event.type == pygame.MOUSEBUTTONDOWN:
-                player.shoot(mouse_pos=pygame.mouse.get_pos(),power=10)
+                player.shoot(mouse_pos=pygame.mouse.get_pos())
         player.update(display)
         display.fill((0,0,0))
         playing_area.show_map(display)

@@ -28,9 +28,10 @@ class Map:
         self.map = []
         self.load_map()
         self.tileset = tileset
-        self.offset = offset
+        self._offset = offset
         self.width = size[0]
         self.height = size[1]
+        
     def load_map(self):
         with open(self.map_file+"_Background.csv", 'r') as back:
             with open(self.map_file+"_Platforms.csv", 'r') as platforms:
@@ -42,41 +43,73 @@ class Map:
                             temp[index] = backline[index]
                     self.map.append(temp)
                 
+    @property
+    def offset(self):
+        return self._offset
+    
+    @offset.setter
+    def offset(self,offset):
+        offset[1] = max(0,offset[1])
+        if not isinstance(offset, Vector2):
+            self._offset = Vector2(offset)
+        else :
+            self._offset = offset            
+    
     def show_map(self,display):
         display_tile_width = display.get_rect().width // self.tileset.width
         display_tile_height = display.get_rect().height // self.tileset.height
-        for i,line in enumerate(self.map[self.offset[1]:self.offset[1]+display_tile_height]):
-            for j,item in enumerate(line[self.offset[0]:self.offset[0]+display_tile_width]):
-                display.blit(self.tileset.tiles[item], (j*self.tileset.width, i*self.tileset.height))
+        bottom = round(self.offset[1]+display_tile_height+0.5)
+        top = int(self.offset[1])
+        right = round(self.offset[0]+display_tile_width+0.5)
+        left = int(self.offset[0])
+        y_offset = self.offset[1]%1*self.tileset.height
+        x_offset = self.offset[0]%1*self.tileset.height
+        for i,line in enumerate(self.map[top:bottom]):
+            for j,item in enumerate(line[left:right]):
+                display.blit(self.tileset.tiles[item], (j*self.tileset.width+x_offset, i*self.tileset.height-y_offset))
     
     def get_colliders(self,display):
         colliders = []
         display_tile_width = display.get_rect().width // self.tileset.width
         display_tile_height = display.get_rect().height // self.tileset.height
-        for i,line in enumerate(self.map[self.offset[1]:self.offset[1]+display_tile_height]):
-            for j,item in enumerate(line[self.offset[0]:self.offset[0]+display_tile_width]):
-                if item not in (111,23,66,29,117):
-                    colliders.append(pygame.Rect(j*self.tileset.width, i*self.tileset.height, self.tileset.width, self.tileset.height))
+        bottom = round(self.offset[1]+display_tile_height+0.5)
+        top = int(self.offset[1])
+        right = round(self.offset[0]+display_tile_width+0.5)
+        left = int(self.offset[0])
+        y_offset = self.offset[1]%1*self.tileset.height
+        x_offset = self.offset[0]%1*self.tileset.height
+        for i,line in enumerate(self.map[top:bottom]):
+            for j,item in enumerate(line[left:right]):
+                if item not in (111,23,66,29,117,67):
+                    colliders.append(pygame.Rect(j*self.tileset.width-x_offset, i*self.tileset.height-y_offset, self.tileset.width, self.tileset.height))
         return colliders
+    
     
     def get_interactibles(self,display):
         interactibles = []
         display_tile_width = display.get_rect().width // self.tileset.width
         display_tile_height = display.get_rect().height // self.tileset.height
-        for i,line in enumerate(self.map[self.offset[1]:self.offset[1]+display_tile_height]):
-            for j,item in enumerate(line[self.offset[0]:self.offset[0]+display_tile_width]):
-                if item in (181,203,225):
-                    interactibles.append(pygame.Rect(j*self.tileset.width, i*self.tileset.height, self.tileset.width, self.tileset.height))
+        bottom = round(self.offset[1]+display_tile_height+0.5)
+        top = int(self.offset[1])
+        right = round(self.offset[0]+display_tile_width+0.5)
+        left = int(self.offset[0])
+        y_offset = self.offset[1]%1*self.tileset.height
+        x_offset = self.offset[0]%1*self.tileset.height
+        for i,line in enumerate(self.map[top:bottom]):
+            for j,item in enumerate(line[left:right]):
+                if item in (181,203,225,67):
+                    interactibles.append(pygame.Rect(j*self.tileset.width-x_offset, i*self.tileset.height-y_offset, self.tileset.width, self.tileset.height))
         return interactibles
 
     def interact(self,rect,player,display):
-        pass
+        pos = list(map(int,Vector2(rect.center)//16))
+        if self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] in (67,0):
+            player.power =15
     
     def shot(self,rect,player,display):
         pos = list(map(int,Vector2(rect.center)//16))
-        print(pos)
-        if self.map[pos[1]+self.offset[1]][pos[0]+self.offset[0]] in (181,203,225):
-            self.map[pos[1]+self.offset[1]][pos[0]+self.offset[0]] = 111
+        if self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] in (181,203,225):
+            self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] = 111
 
 
 if __name__ == '__main__':
@@ -97,9 +130,10 @@ if __name__ == '__main__':
                 quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    playing_area.offset[1] -= playing_area.height
+                    playing_area.offset -= Vector2(0,0.1)
                 if event.key == pygame.K_DOWN:
-                    playing_area.offset[1] += playing_area.height
+                    playing_area.offset += Vector2(0,0.1)
+            
         playing_area.show_map(display)
         for collider in playing_area.get_colliders(display):
             pygame.draw.rect(display, (255, 0, 0), collider, 1)
