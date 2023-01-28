@@ -18,7 +18,7 @@ class Tileset:
         h = self.rect.height//self.height
         for i in range(h):
             for j in range(w):
-                tile = pygame.Surface(self.size)
+                tile = pygame.Surface(self.size, pygame.SRCALPHA)
                 tile.blit(self.image, (0, 0), (j*self.width, i*self.height, *self.size))
                 self.tiles.append(tile)
 
@@ -31,6 +31,7 @@ class Map:
         self._offset = offset
         self.width = size[0]
         self.height = size[1]
+        self.frame = 0
         
     def load_map(self):
         with open(self.map_file+"_Background.csv", 'r') as back:
@@ -56,6 +57,7 @@ class Map:
             self._offset = offset            
     
     def show_map(self,display):
+        self.frame += 1
         display_tile_width = display.get_rect().width // self.tileset.width
         display_tile_height = display.get_rect().height // self.tileset.height
         bottom = round(self.offset[1]+display_tile_height+0.5)
@@ -64,10 +66,16 @@ class Map:
         left = int(self.offset[0])
         y_offset = self.offset[1]%1*self.tileset.height
         x_offset = self.offset[0]%1*self.tileset.height
+        collectibles = []
         for i,line in enumerate(self.map[top:bottom]):
             for j,item in enumerate(line[left:right]):
-                display.blit(self.tileset.tiles[item], (j*self.tileset.width+x_offset, i*self.tileset.height-y_offset))
-    
+                if item  ==  67:                    
+                    display.blit(self.tileset.tiles[23], (j*self.tileset.width+x_offset, i*self.tileset.height-y_offset))
+                    collectibles.append({"pos":(j,i),"tile":self.tileset.tiles[67]})
+                else:
+                    display.blit(self.tileset.tiles[item], (j*self.tileset.width+x_offset, i*self.tileset.height-y_offset))
+        for collectible in collectibles:
+            display.blit(pygame.transform.scale2x(collectible["tile"]), (collectible["pos"][0]*self.tileset.width+x_offset-self.tileset.height/2, collectible["pos"][1]*self.tileset.height-y_offset-self.tileset.height+abs(self.frame%90-45)*0.15))
     def get_colliders(self,display):
         colliders = []
         display_tile_width = display.get_rect().width // self.tileset.width
@@ -122,6 +130,7 @@ if __name__ == '__main__':
     playing_area.show_map(display)
     for collider in playing_area.get_colliders(display):
         pygame.draw.rect(display, (255, 0, 0), collider, 1)
+    clock = pygame.time.Clock()
     pygame.display.update()
     while True:
         for event in pygame.event.get():
@@ -135,8 +144,12 @@ if __name__ == '__main__':
                     playing_area.offset += Vector2(0,0.1)
             
         playing_area.show_map(display)
+        
         for collider in playing_area.get_colliders(display):
             pygame.draw.rect(display, (255, 0, 0), collider, 1)
         for collider in playing_area.get_interactibles(display):
             pygame.draw.rect(display, (0, 0, 255), collider, 1)
+        
         pygame.display.update()
+        
+        clock.tick(60)
