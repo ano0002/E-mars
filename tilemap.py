@@ -52,6 +52,9 @@ class Map:
     @offset.setter
     def offset(self,offset):
         offset[1] = max(0,offset[1])
+        
+        offset[1] = min(offset[1],len(self.map)-self.height)
+        
         if not isinstance(offset, Vector2):
             self._offset = Vector2(offset)
         else :
@@ -98,7 +101,7 @@ class Map:
     
     
     def get_interactibles(self,display):
-        interactibles = []
+        interactibles = {"rects":[],"tiles":[]}
         display_tile_width = display.get_rect().width // self.tileset.width
         display_tile_height = display.get_rect().height // self.tileset.height
         bottom = round(self.offset[1]+display_tile_height+0.5)
@@ -110,15 +113,20 @@ class Map:
         for i,line in enumerate(self.map[top:bottom]):
             for j,item in enumerate(line[left:right]):
                 if item in (181,203,225,67):
-                    interactibles.append(pygame.Rect(j*self.tileset.width-x_offset, i*self.tileset.height-y_offset, self.tileset.width, self.tileset.height))
+                    interactibles["rects"].append(pygame.Rect(j*self.tileset.width-x_offset, i*self.tileset.height-y_offset, self.tileset.width, self.tileset.height))
+                    interactibles["tiles"].append(item)
         return interactibles
 
-    def interact(self,rect,player,display):
-        pos = list(map(int,Vector2(rect.center)//16))
+    def interact(self,rect,tile,player,display):
+        y_offset = self.offset[1]%1*self.tileset.height
+        x_offset = self.offset[0]%1*self.tileset.height
+        pos = list(map(int,Vector2(rect.centerx+x_offset,rect.centery+y_offset)//16))
         if self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] in (67,0):
-            player.power =15
+            if player :
+                player.power =15
             self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] = 111
-    def shot(self,rect,player,display):
+            
+    def shot(self,rect,tile,player,display):
         pos = list(map(int,Vector2(rect.center)//16))
         if self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] in (181,203,225):
             self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] = 111
@@ -143,15 +151,16 @@ if __name__ == '__main__':
                 quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    playing_area.offset -= Vector2(0,0.1)
+                    playing_area.offset -= Vector2(0,0.4)
                 if event.key == pygame.K_DOWN:
-                    playing_area.offset += Vector2(0,0.1)
-            
+                    playing_area.offset += Vector2(0,0.4)
+            if event.type == pygame.MOUSEWHEEL:    
+                playing_area.offset += Vector2(0,-event.y)
         playing_area.show_map(display)
         
         for collider in playing_area.get_colliders(display):
             pygame.draw.rect(display, (255, 0, 0), collider, 1)
-        for collider in playing_area.get_interactibles(display):
+        for collider in playing_area.get_interactibles(display)["rects"]:
             pygame.draw.rect(display, (0, 0, 255), collider, 1)
         
         pygame.display.update()

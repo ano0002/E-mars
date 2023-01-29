@@ -36,11 +36,12 @@ class Player():
             "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
             "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
         }
+        last_pos = self.tilemap.offset.copy()[1]
+        
         for _ in range(int(abs(self.velocity[1])//8)):
             colliders = self.tilemap.get_colliders(display)
             if  self.rects["bottom"].collidelist(colliders)!=-1:
                 self.tilemap.offset -= Vector2(0,0.5)
-                print("break")  
                 break
             if self.velocity[1] > 0:
                 self.tilemap.offset += Vector2(0,0.5)
@@ -59,8 +60,9 @@ class Player():
         
         
         interactibles = self.tilemap.get_interactibles(display)
-        if self.rect.collidelist(interactibles) != -1:
-            self.tilemap.interact(interactibles[self.rect.collidelist(interactibles)],self,display)
+        collidewith = self.rect.collidelist(interactibles["rects"])
+        if collidewith != -1:
+            self.tilemap.interact(interactibles["rects"][collidewith],interactibles["tiles"][collidewith],self,display)
             
         colliders = self.tilemap.get_colliders(display)
         
@@ -105,9 +107,13 @@ class Player():
         if self.rects["bottom-right"].collidelist(colliders) != -1 and not self.rects["bottom"].collidelist(colliders) != -1:
             self.velocity[0] = -self.velocity[1]
         
+        new_pos = self.tilemap.offset.copy()[1]
+        
+        upper_movement = (new_pos-last_pos)*16
+    
         
         for bullet in self.bullets:
-            bullet.update(display)
+            bullet.update(display,upper_movement)
             
         
     def draw(self, screen):
@@ -139,10 +145,14 @@ class Bullet():
         self.velocity = velocity
         self.gravity = 0.5
     
-    def update(self,display):
-        self.rect.move_ip(self.velocity[0],self.velocity[1])
+    def update(self,display,upper_movement):
+        self.rect.move_ip(self.velocity[0],self.velocity[1]-upper_movement)
         colliders = self.map.get_colliders(display)
         interactibles = self.map.get_interactibles(display)
+        interactiblecollision = self.rect.collidelist(interactibles["rects"])
+        if interactiblecollision != -1:
+            self.map.shot(interactibles["rects"][interactiblecollision],interactibles["tiles"][interactiblecollision],self.player,display)
+        
         if self.rect.bottom >= self.map.height*16:
             self.player.bullets.remove(self)
         elif self.rect.bottom <= 0:
@@ -151,8 +161,6 @@ class Bullet():
             self.player.bullets.remove(self)
         elif self.rect.x <= 0:
             self.player.bullets.remove(self)
-        elif self.rect.collidelist(interactibles) != -1:
-            self.map.shot(interactibles[self.rect.collidelist(interactibles)],self.player,display)
         elif self.rect.collidelist(colliders) != -1:
             self.player.bullets.remove(self)
         
@@ -193,7 +201,7 @@ if __name__ == "__main__":
             pygame.draw.rect(display,(0,255,0),rect,1)
         for collider in playing_area.get_colliders(display):
             pygame.draw.rect(display,(255,0,0),collider,1)
-        for collider in playing_area.get_interactibles(display):
+        for collider in playing_area.get_interactibles(display)["rects"]:
             pygame.draw.rect(display, (0, 0, 255), collider, 1)
         player.draw(display)
         pygame.display.update()
