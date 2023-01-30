@@ -15,17 +15,19 @@ class Particle:
         self.pos = pos
         self.vel = vel.copy()
         self.timer = timer
+        self.max_timer = timer
         self.color = color
         self.radius = radius
         self.gravity = gravity
         self.alive = True
         self.glow_radius = glow_radius
+        self.alpha = 255
     
     def update(self):
         self.pos += self.vel
         self.vel[1] += self.gravity
         self.vel[0] *= 0.9
-        
+        self.alpha = int(255 * self.timer / self.max_timer)
         self.timer -= 1
         if self.timer <= 0:
             self.alive = False
@@ -33,8 +35,9 @@ class Particle:
     def draw(self,screen):
         if self.glow_radius > 0:
             surf = circle_surf(self.glow_radius, list(x*0.4 for x in self.color))
+            surf.set_alpha(self.alpha)
             screen.blit(surf, (self.pos[0]-self.glow_radius, self.pos[1]-self.glow_radius), special_flags=pygame.BLEND_ADD)
-        pygame.draw.circle(screen, self.color, self.pos, self.radius)
+        pygame.draw.circle(screen, (*self.color,self.alpha), self.pos, self.radius)
 
 class Particle_Emitter:
     def __init__(self, rate, pos, vel, color = (255,255,255), radius = 5, gravity = 0.1,timer=50,glow_radius=0):
@@ -78,7 +81,10 @@ if __name__ == '__main__':
     pygame.display.set_caption('game base')
     screen = pygame.display.set_mode((500, 500),0,32)
 
-    emitter = Particle_Emitter(rate = 4, pos = Vector2(250, 250), vel = (lambda : random.random()*5-2.5, -5),timer = 50,glow_radius=15,color=(255,0,0))
+    emitter = Particle_Emitter(rate = 4, pos = Vector2(250, 250),
+                               vel = (lambda : random.random()*2-1, lambda : -random.random()*4-2),
+                               timer = 20,radius = 1,
+                               glow_radius=5,color=(255,0,0))
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
