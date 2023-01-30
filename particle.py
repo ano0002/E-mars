@@ -1,13 +1,14 @@
 #!/usr/bin/python3.4
 # Setup Python ----------------------------------------------- #
 
-import pygame
+import pygame,random
 from pygame.math import Vector2
 
-def circle_surf(radius, color):
+
+def circle_surf(radius, color,alpha):
     surf = pygame.Surface((radius * 2, radius * 2))
     pygame.draw.circle(surf, color, (radius, radius), radius)
-    surf.set_colorkey((0, 0, 0))
+    surf.set_alpha(alpha)
     return surf
 
 class Particle:
@@ -35,7 +36,7 @@ class Particle:
     
     def draw(self,screen):
         if self.glow_radius > 0:
-            surf = circle_surf(self.glow_radius, (*self.glow_color,self.alpha))
+            surf = circle_surf(self.glow_radius, self.glow_color,self.alpha)
             screen.blit(surf, (self.pos[0]-self.glow_radius, self.pos[1]-self.glow_radius), special_flags=pygame.BLEND_ADD)
         pygame.draw.circle(screen, (*self.color,self.alpha), self.pos, self.radius)
 
@@ -73,6 +74,19 @@ class Particle_Emitter:
         for particle in self.particles:
             particle.draw(screen)
 
+class Torch(Particle_Emitter):
+    def __init__(self, tile_pos,offset):
+        super().__init__(rate =1, pos = list(i*16 for i in tile_pos),
+                               vel = (lambda : random.random()*4-2, lambda : -random.random()*4-2),
+                               timer = 20,radius = 1,
+                               glow_radius=5,color=(255,0,0),glow_color=(50,0,0))
+        self.offset = offset
+        self.tile_pos = tile_pos
+    def update(self,offset):
+        self.offset = offset
+        self.pos = list(i*16 for i in (self.tile_pos[0]-self.offset[0],self.tile_pos[1]-self.offset[1]))
+        super().update()
+
 if __name__ == '__main__':
     import pygame,random
 
@@ -83,7 +97,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((500, 500),0,32)
 
     emitter = Particle_Emitter(rate =1, pos = Vector2(250, 250),
-                               vel = (lambda : random.random()*2-1, lambda : -random.random()*4-2),
+                               vel = (lambda : random.random()*4-2, lambda : -random.random()*4-2),
                                timer = 20,radius = 1,
                                glow_radius=5,color=(255,0,0),glow_color=(50,0,0))
     while True:

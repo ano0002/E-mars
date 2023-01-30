@@ -1,5 +1,7 @@
 import pygame
 from pygame.math import Vector2
+from particle import Torch
+
 
 class Tileset:
     def __init__(self, file, tilesize=(16, 16)):
@@ -26,9 +28,10 @@ class Map:
     def __init__(self, map_file, tileset,offset=[0,0],size=(60,40)):
         self.map_file = map_file
         self.map = []
+        self.torchs = []
+        self._offset = offset
         self.load_map()
         self.tileset = tileset
-        self._offset = offset
         self.width = size[0]
         self.height = size[1]
         self.frame = 0
@@ -36,12 +39,14 @@ class Map:
     def load_map(self):
         with open(self.map_file+"_Background.csv", 'r') as back:
             with open(self.map_file+"_Platforms.csv", 'r') as platforms:
-                for line in platforms:
+                for i,line in enumerate(platforms):
                     backline =  [int(l) for l in back.readline().split(",")]
                     temp = [int(l) for l in line.split(",")]
-                    for index,elem in enumerate(temp):
+                    for j,elem in enumerate(temp):
                         if elem == -1:
-                            temp[index] = backline[index]
+                            temp[j] = backline[j]
+                        if temp[j] == 66:
+                            self.torchs.append(Torch([j+.5,i+.5],self.offset))
                     self.map.append(temp)
                 
         
@@ -54,6 +59,8 @@ class Map:
         offset[1] = max(0,offset[1])
         
         offset[1] = min(offset[1],len(self.map)-self.height)
+        
+            
         
         if not isinstance(offset, Vector2):
             self._offset = Vector2(offset)
@@ -83,6 +90,9 @@ class Map:
             effect= abs(self.frame%90-45)*0.15
             display.blit(pygame.transform.scale(collectible["tile"],(32,32)), (collectible["pos"][0]+x_offset-self.tileset.height/2, collectible["pos"][1]-y_offset-self.tileset.height+effect))
     
+        for torch in self.torchs:
+            torch.update(self.offset)
+            torch.draw(display)
     def get_colliders(self,display):
         colliders = []
         display_tile_width = display.get_rect().width // self.tileset.width
