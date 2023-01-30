@@ -22,7 +22,9 @@ player.rect.center = (display_width/2,2*display_height/3)
 
 clock = pygame.time.Clock()
 
+music = pygame.mixer.music.load('./music/Vast Surroundings (LOOP).mp3')
 
+music = pygame.mixer.music.play(-1)
 
 while True:
     for event in pygame.event.get():
