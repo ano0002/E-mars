@@ -9,7 +9,7 @@ class Player():
         self.rect.y = position[1]
         self.velocity = [0, 0]
         self.gravity = 0.5
-        self.gun = pygame.transform.scale(pygame.image.load('./assets/gun.png'), (25, 25))
+        self.gun ='./assets/gun.png'
         self.max_bullets = 2
         self.bullet_count = self.max_bullets
         self.bullets = []
@@ -23,6 +23,14 @@ class Player():
             "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
             "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
         }
+   
+    @property 
+    def gun(self):
+        return self._gun
+    
+    @gun.setter
+    def gun(self,gun):
+        self._gun =  pygame.transform.scale(pygame.image.load(gun), (25, 25))
         
     def update(self,display):
         
@@ -114,8 +122,7 @@ class Player():
         
         for bullet in self.bullets:
             bullet.update(display,upper_movement)
-            
-        
+               
     def draw(self, screen):
         screen.blit(self.image, self.rect)
         pos = pygame.mouse.get_pos()

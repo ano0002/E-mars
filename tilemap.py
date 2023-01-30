@@ -124,6 +124,7 @@ class Map:
         if self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] in (67,0):
             if player :
                 player.power =15
+                player.gun = "assets/shotgun.png"
             self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] = 111
             
     def shot(self,rect,tile,player,display):
