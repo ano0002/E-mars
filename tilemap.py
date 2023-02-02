@@ -48,6 +48,57 @@ class Map:
                         if temp[j] == 66:
                             self.torchs.append(Torch([j+.5,i+.5],self.offset))
                     self.map.append(temp)
+        self.calculate_borders()
+    
+    def calculate_borders(self):
+        self.test_map = [line.copy() for line in self.map]
+        for i,line in enumerate(self.map):
+            for j,elem in enumerate(line):
+                for center_piece in (205,117,29):
+                    if elem == center_piece:
+                        if i == 0 or j == 0 or i == len(self.map)-1 or j == len(line)-1 :
+                            continue
+                        if (self.test_map[i+1][j] == center_piece and 
+                            self.test_map[i-1][j] == center_piece and
+                            self.test_map[i][j+1] == center_piece and
+                            self.test_map[i][j-1] == center_piece):
+                                if self.test_map[i+1][j+1] != center_piece:
+                                    self.map[i][j] = center_piece-20
+                                if self.test_map[i+1][j-1] != center_piece:
+                                    self.map[i][j] = center_piece-19
+                                if self.test_map[i-1][j+1] != center_piece:
+                                    self.map[i][j] = center_piece+2
+                                if self.test_map[i-1][j-1] != center_piece:
+                                    self.map[i][j] = center_piece+3
+                        elif (self.test_map[i+1][j] == center_piece and 
+                            self.test_map[i-1][j] == center_piece and
+                            self.test_map[i][j+1] == center_piece):
+                                self.map[i][j] = center_piece-1
+                        elif (self.test_map[i+1][j] == center_piece and 
+                            self.test_map[i-1][j] == center_piece and
+                            self.test_map[i][j-1] == center_piece):
+                                self.map[i][j] = center_piece+1
+                        elif (self.test_map[i+1][j] == center_piece and 
+                            self.test_map[i][j+1] == center_piece and
+                            self.test_map[i][j-1] == center_piece):
+                                self.map[i][j] =  center_piece-22
+                        elif (self.test_map[i-1][j] == center_piece and 
+                            self.test_map[i][j+1] == center_piece and
+                            self.test_map[i][j-1] == center_piece):
+                                self.map[i][j] = center_piece+22
+                        elif (self.test_map[i+1][j] == center_piece and 
+                            self.test_map[i][j-1] == center_piece):
+                                self.map[i][j] = center_piece-21
+                        elif (self.test_map[i+1][j] == center_piece and 
+                            self.test_map[i][j+1] == center_piece):
+                                self.map[i][j] = center_piece-23
+                        elif (self.test_map[i-1][j] == center_piece and 
+                            self.test_map[i][j-1] == center_piece):
+                                self.map[i][j] = center_piece+23
+                        elif (self.test_map[i-1][j] == center_piece and 
+                            self.test_map[i][j+1] == center_piece):
+                                self.map[i][j] = center_piece+21
+                            
                 
         
     @property
@@ -169,11 +220,12 @@ if __name__ == '__main__':
                 playing_area.offset += Vector2(0,-event.y)
         playing_area.show_map(display)
         
+        """
         for collider in playing_area.get_colliders(display):
             pygame.draw.rect(display, (255, 0, 0), collider, 1)
         for collider in playing_area.get_interactibles(display)["rects"]:
             pygame.draw.rect(display, (0, 0, 255), collider, 1)
-        
+        """
         pygame.display.update()
         
         clock.tick(60)
