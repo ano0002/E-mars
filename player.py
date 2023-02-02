@@ -38,7 +38,7 @@ class Player():
         
         self.rects = {
             "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
-            "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1),
+            "bottom":pygame.Rect(self.rect.centerx-2,self.rect.bottom,4,1),
             "bottom-left":pygame.Rect(self.rect.x,self.rect.bottom,1,1),
             "bottom-right":pygame.Rect(self.rect.right,self.rect.bottom,1,1),
             "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
@@ -90,7 +90,7 @@ class Player():
                 self.rect.x = 0
                 self.rects = {
                     "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
-                    "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1),
+                    "bottom":pygame.Rect(self.rect.centerx-2,self.rect.bottom,4,1),
                     "bottom-left":pygame.Rect(self.rect.x,self.rect.bottom,1,1),
                     "bottom-right":pygame.Rect(self.rect.right,self.rect.bottom,1,1),
                     "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
@@ -103,7 +103,7 @@ class Player():
                 self.rect.right = self.tilemap.width*16 
                 self.rects = {
                     "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
-                    "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1),
+                    "bottom":pygame.Rect(self.rect.centerx-2,self.rect.bottom,4,1),
                     "bottom-left":pygame.Rect(self.rect.x,self.rect.bottom,1,1),
                     "bottom-right":pygame.Rect(self.rect.right,self.rect.bottom,1,1),
                     "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
