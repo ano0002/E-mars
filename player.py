@@ -23,6 +23,10 @@ class Player():
             "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
             "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
         }
+        self.sounds = {
+            "gunshot":pygame.mixer.Sound("./sfx/gunshot.wav"),
+            "pickup":pygame.mixer.Sound("./sfx/pickup.wav")
+        }
    
     @property 
     def gun(self):
@@ -30,6 +34,8 @@ class Player():
     
     @gun.setter
     def gun(self,gun):
+        if hasattr(self,"_gun"):
+            pygame.mixer.Sound.play(self.sounds["pickup"])
         self._gun =  pygame.transform.scale(pygame.image.load(gun), (25, 25))
         
     def update(self,display):
@@ -76,7 +82,8 @@ class Player():
         
         if self.rects["bottom"].collidelist(colliders) != -1 and (self.rects["bottom-left"].collidelist(colliders) != -1 or self.rects["bottom-right"].collidelist(colliders) != -1):
             self.velocity[1] = 0
-            self.bullet_count = self.max_bullets
+            if round(self.velocity[0]) == 0:
+                self.bullet_count = self.max_bullets
             while self.rects["bottom"].collidelist(colliders) != -1:
                 self.tilemap.offset -= (0,1/16)
                 colliders = self.tilemap.get_colliders(display)
@@ -139,6 +146,7 @@ class Player():
             self.bullet_count -= 1
         else:
             return
+        pygame.mixer.Sound.play(self.sounds["gunshot"])
         angle = math.radians(360-math.atan2(mouse_pos[1]-self.rect.centery,mouse_pos[0]-self.rect.centerx)*180/math.pi)
         self.velocity[0] = -math.cos(angle)*power
         self.velocity[1] = math.sin(angle)*power

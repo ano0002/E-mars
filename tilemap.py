@@ -35,6 +35,9 @@ class Map:
         self.width = size[0]
         self.height = size[1]
         self.frame = 0
+        self.sounds = {
+            "break": pygame.mixer.Sound("./sfx/break.wav")
+        }
         
     def load_map(self):
         with open(self.map_file+"_Background.csv", 'r') as back:
@@ -192,6 +195,14 @@ class Map:
         pos = list(map(int,Vector2(rect.center)//16))
         if self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] in (181,203,225):
             self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])] = 111
+            pygame.mixer.Sound.play(self.sounds["break"])
+        if self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])+1] in (181,203,225):
+            self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])+1] = 111
+            pygame.mixer.Sound.play(self.sounds["break"])
+        if self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])-1] in (181,203,225):
+            self.map[pos[1]+int(self.offset[1])][pos[0]+int(self.offset[0])-1] = 111
+            pygame.mixer.Sound.play(self.sounds["break"])
+        print(pos)
 
 
 if __name__ == '__main__':
