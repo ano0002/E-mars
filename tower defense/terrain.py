@@ -39,6 +39,7 @@ class PlacingTerrain(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.direction = 0
 
 class Terrain(pygame.sprite.Group):
     def __init__(self, file, tilesize=(16, 16)):

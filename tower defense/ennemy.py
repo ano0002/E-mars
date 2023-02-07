@@ -18,18 +18,33 @@ class Ennemy(pygame.sprite.Sprite):
         self.terrain = terrain
         
     def update(self):
-        if self.direction == 1:
-            self.pos[0] += 1
-        elif self.direction == 3:
-            self.pos[0] -= 1
-        elif self.direction == 4:
-            self.pos[1] -= 1
-        elif self.direction == 2:
-            self.pos[1] += 1
-        self.rect.center = self.pos
-        if (self.pos[1]-7) % 16 == 0 or (self.pos[0]-7) % 16 == 0:
-            self.direction = self.terrain.get_direction(self.pos)
-        self.frame += 1
+        if self.alive :
+            if self.direction == 1:
+                self.pos[0] += 1
+            elif self.direction == 3:
+                self.pos[0] -= 1
+            elif self.direction == 4:
+                self.pos[1] -= 1
+            elif self.direction == 2:
+                self.pos[1] += 1
+            self.rect.center = self.pos
+            
+            terrain_px_width = len(self.terrain.tiles[0])*self.terrain.width
+            terrain_px_height = len(self.terrain.tiles)*self.terrain.height
+            if self.pos[0] > terrain_px_width or self.pos[1] > terrain_px_height or self.pos[1] < 0:
+                self.alive = False
+                del self
+                return
+                self.game.hit(self.pv)
+            
+            if self.pos[0]>0 :
+                if self.direction%2 == 0:
+                    if (self.pos[1]-8) % 16 == 0:
+                        self.direction = self.terrain.get_direction(self.pos)
+                else:
+                    if (self.pos[0]-8) % 16 == 0:
+                        self.direction = self.terrain.get_direction(self.pos)
+            self.frame += 1
     
     def hit(self, damage):
         self.pv -= damage
@@ -40,19 +55,47 @@ class Ennemy(pygame.sprite.Sprite):
 class EnnemyManager():
     def __init__(self, map, waves):
         self.map = map
-        self.ennemies = pygame.sprite.Group()
         self.waves = waves
+        self.wave = 0
         self.next_wave()
 
     def next_wave(self):
-        for i in range(10):
-            self.ennemies.add(Ennemy([i*16,24], 1,self.map))
+        self.waves[self.wave].spawning = True
+        self.wave += 1
 
     def draw(self, display):
-        self.ennemies.draw(display)
+        for wave in self.waves:
+            wave.ennemies.draw(display)
 
     def update(self):
+        for wave in self.waves:
+            wave.update()
+
+class Wave():
+    def __init__(self,number ,timing, life, speed, damage, color,tilemap):
+        self.number = number-1
+        self.timing = timing
+        self.map = tilemap
+        self.life = life
+        self.speed = speed
+        self.damage = damage
+        self.color = color
+        self.ennemies = pygame.sprite.Group(Ennemy([-16,24], 1,self.map))
+        self.spawning = False
+        self.frame = 0
+        
+    def update(self):
+        self.frame += 1
+        if self.spawning:
+            if self.frame % self.timing == 0:
+                self.ennemies.add(Ennemy([-16,24], 1,self.map,self.color,pv=self.life))
+                self.number -= 1
+            if self.number == 0:
+                self.spawning = False
+                self.frame = 0
         self.ennemies.update()
+    
+    
 
 if __name__ == "__main__":
     import terrain
@@ -60,7 +103,7 @@ if __name__ == "__main__":
     pygame.init()
     clock = pygame.time.Clock()
     terrain = terrain.Terrain("./tiled_map/map.csv")
-    spawner = EnnemyManager(terrain)
+    spawner = EnnemyManager(terrain,[Wave(10,16,1,1,1,(255,0,0),terrain)])
     
     display = pygame.display.set_mode((800,600))
     
