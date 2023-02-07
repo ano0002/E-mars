@@ -1,4 +1,5 @@
 import pygame
+from ui import Button
 
 class Turret(pygame.sprite.Sprite):
     def __init__(self, x, y, image):
@@ -7,18 +8,14 @@ class Turret(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
-class PlaceHolder(pygame.sprite.Sprite):
+class PlaceHolder(Button):
     def __init__(self, x, y,terrain):
-        super().__init__()
-        self.image = pygame.Surface([16,16], pygame.SRCALPHA)
-        self.image.fill((255,0,0))
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        super().__init__(x,y,16,16,(0,255,0),on_click=self.on_click)
         self.terrain = terrain
     
     def update(self, mousepos):
         self.rect.center = mousepos
+        self.image.fill((255,0,0))
         for tile in self.terrain.placing_tiles:
             if tile.rect.collidepoint(mousepos):
                 self.rect.center = tile.rect.center
@@ -27,11 +24,22 @@ class PlaceHolder(pygame.sprite.Sprite):
     
     def draw(self, display):
         display.blit(self.image, self.rect)
+    
+    def on_click(self,button,mousepos):
+        turret = Turret(*self.rect.center, "./assets/tower.png")
+        turrets.add(turret)
+        self.kill()
+    
+    def kill(self):
+        global placeholder
+        buttons.remove(self)
+        placeholder = None
+        del self
+    
 if __name__ == "__main__":
     from terrain import Terrain
-    from ui import Button
     pygame.init()
-    pygame.display.set_caption("Terrain")
+    pygame.display.set_caption("Turrets")
     display = pygame.display.set_mode((800, 600))
     terrain = Terrain("./tiled_map/map.csv")
     turrets = pygame.sprite.Group()
@@ -43,6 +51,7 @@ if __name__ == "__main__":
         turrets.add(turret)
         """
         placeholder = PlaceHolder(*mousepos,terrain)
+        buttons.add(placeholder)
         
     buttons = pygame.sprite.Group(Button(512,0,100,50,text="Test",on_click=new_turret))
     
