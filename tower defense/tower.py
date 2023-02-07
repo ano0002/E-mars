@@ -22,11 +22,20 @@ if __name__ == "__main__":
     pygame.display.set_caption("Terrain")
     display = pygame.display.set_mode((800, 600))
     terrain = Terrain("./tiled_map/map.csv")
+    buttons = pygame.sprite.Group()
+    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                        for button in buttons:
+                            if button.rect.collidepoint(event.pos):
+                                button.on_click(button,mousepos=event.pos)
         display.fill((0,0,0))
         terrain.draw(display)
+        buttons.update(pygame.mouse.get_pos())
+        buttons.draw(display)
         pygame.display.update()
