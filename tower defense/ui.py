@@ -3,7 +3,7 @@ import pygame
 class Button(pygame.sprite.Sprite):
     default_on_click = lambda self,mousepos: print("Clicked")
     
-    def __init__(self, x, y, width, height, color=(255,255,255), text="", text_color=(0,0,0), font_size=30,on_click=None):
+    def __init__(self, x, y, width, height, color=(255,255,255),hover_color=(200,200,200), text="", text_color=(0,0,0), font_size=30,on_click=None):
         super().__init__()
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
@@ -14,6 +14,8 @@ class Button(pygame.sprite.Sprite):
         self.font_size = font_size
         self.font = pygame.font.SysFont("Arial", self.font_size)
         self.text = text
+        self.color = color
+        self.hover_color = hover_color
         if on_click:
             self.on_click = on_click
         else:
@@ -34,9 +36,9 @@ class Button(pygame.sprite.Sprite):
       
     def update(self, mousepos):
         if self.rect.collidepoint(mousepos):
-            self.image.fill((200,200,200))
+            self.image.fill(self.hover_color)
         else:
-            self.image.fill((255,255,255))
+            self.image.fill(self.color)
         self.image.blit(self.text_image, self.text_rect)
     
         
