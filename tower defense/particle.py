@@ -1,6 +1,3 @@
-#!/usr/bin/python3.4
-# Setup Python ----------------------------------------------- #
-
 import pygame,random
 from pygame.math import Vector2
 
@@ -12,7 +9,7 @@ def circle_surf(radius, color,alpha):
     return surf
 
 class Particle:
-    def __init__(self, pos, vel, timer,color,radius,gravity,glow_color,glow_radius=0):
+    def __init__(self, pos, vel, timer,color,radius,gravity,glow_color=(0,0,0),glow_radius=0):
         self.pos = pos
         self.vel = vel.copy()
         self.timer = timer
@@ -35,10 +32,11 @@ class Particle:
             self.alive = False
     
     def draw(self,screen):
-        if self.glow_radius > 0:
-            surf = circle_surf(self.glow_radius, self.glow_color,self.alpha)
-            screen.blit(surf, (self.pos[0]-self.glow_radius, self.pos[1]-self.glow_radius), special_flags=pygame.BLEND_ADD)
-        pygame.draw.circle(screen, (*self.color,self.alpha), self.pos, self.radius)
+        if self.alive:
+            if self.glow_radius > 0:
+                surf = circle_surf(self.glow_radius, self.glow_color,self.alpha)
+                screen.blit(surf, (self.pos[0]-self.glow_radius, self.pos[1]-self.glow_radius), special_flags=pygame.BLEND_ADD)
+            pygame.draw.circle(screen, (*self.color,self.alpha), self.pos, self.radius)
 
 class Particle_Emitter:
     def __init__(self, rate, pos, vel, color = (255,255,255), glow_color = (200,200,200), radius = 5, gravity = 0.1,timer=50,glow_radius=0):

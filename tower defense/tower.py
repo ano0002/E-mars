@@ -1,7 +1,15 @@
 import pygame
 from ui import Button
+from custom_maths import sprite_distance
+from ennemy import Ennemy
+import __main__
+
+
 
 class Turret(pygame.sprite.Sprite):
+    range = 10
+    fire_rate = 10
+    damage= 1 
     def __init__(self, x, y, image):
         super().__init__()
         self.image = pygame.image.load(image)
@@ -9,18 +17,38 @@ class Turret(pygame.sprite.Sprite):
         self.rect.center = (x, y)
         self.selected = False
         self.on_click = self.select
+        self.frame = 0
+        if hasattr(__main__,"game") and hasattr(self,"cost"):
+            __main__.game.money -= self.cost
+        
     
     def select(self, button, mousepos):
+        if hasattr(__main__,"game"):
+            __main__.game.unselect_all()
+        else :
+            unselect_all()
         self.selected = not self.selected
-        for turret in turrets:
-            if turret != self:
-                turret.selected = False
     
-
+    def get_closest_ennemy_in_range(self):
+        if hasattr(__main__,"game"):
+            closest = Ennemy((-16,0),0,0,(0,0,0),0,float("inf"))
+            for ennemy in __main__.game.ennemies:
+                if sprite_distance(self,ennemy)< self.range and ennemy.progress> closest.progress:
+                    closest = ennemy
+            return closest
+        else :
+            raise Exception("no game defined")
+        
+    def update(self) -> None:
+        if self.frame % self.fire_rate == 0 :
+            ennemy = self.get_closest_ennemy_in_range()
+            ennemy.hit(self.damage)
+        self.frame +=1
+        
 class LaserTurret(Turret):
-    damage = 10
+    damage = 1
     range = 50
-    fire_rate = 0.5
+    fire_rate = 40
     cost = 100
     def __init__(self, x, y):
         super().__init__(x, y, "./assets/tower.png")
@@ -52,23 +80,35 @@ class PlaceHolder(Button):
     def on_click(self,button,mousepos):
         if self.image.get_at((0,0)) == (0,80,0):
             turret = self.turret_type(*self.rect.center)
-            turrets.add(turret)
+            if hasattr(__main__,"game"):
+                __main__.game.turrets.add(turret)
+            else:
+                turrets.add(turret)
             self.kill()
     
     def kill(self):
-        global placeholder
-        buttons.remove(self)
-        placeholder = None
+        if hasattr(__main__,"game"):
+            __main__.game.buttons.remove(self)
+            __main__.game.placeholder = None
+        else:
+            global placeholder
+            buttons.remove(self)
+            placeholder = None
         del self
+        
+    
     
 if __name__ == "__main__":
     from terrain import Terrain
+    from ennemy import Ennemy,EnnemyManager,Wave
     pygame.init()
+    clock = pygame.time.Clock()
     pygame.display.set_caption("Turrets")
     display = pygame.display.set_mode((800, 600))
     terrain = Terrain("./tiled_map/map.csv")
     turrets = pygame.sprite.Group()
     placeholder = None
+    spawner = EnnemyManager(terrain,[[Wave(10,16,1,1,1,(255,0,0),terrain)]])
     def new_turret(button, mousepos):
         global placeholder
         """
@@ -77,12 +117,16 @@ if __name__ == "__main__":
         """
         placeholder = PlaceHolder(*mousepos,terrain,LaserTurret)
         buttons.add(placeholder)
+    
+    def new_wave(button, mousepos):
+        spawner.next_wave()
         
-    buttons = pygame.sprite.Group(Button(512,0,100,50,text="Test",on_click=new_turret))
+    buttons = pygame.sprite.Group(Button(512,0,200,50,text="New Tower",on_click=new_turret),Button(512,50,200,50,text="Start Wave",on_click=new_wave))
     
     def unselect_all():
         for turret in turrets:
             turret.selected = False
+    
     
     while True:
         for event in pygame.event.get():
@@ -104,9 +148,10 @@ if __name__ == "__main__":
                             unselect_all()
         display.fill((0,0,0))
         terrain.draw(display)
+        spawner.update()
+        spawner.draw(display)
         buttons.update(pygame.mouse.get_pos())
         buttons.draw(display)
-        turrets.update(pygame.mouse.get_pos())
         turrets.draw(display)
         
         for turret in turrets:
@@ -118,3 +163,4 @@ if __name__ == "__main__":
             placeholder.draw(display)
             
         pygame.display.update()
+        clock.tick(60)
