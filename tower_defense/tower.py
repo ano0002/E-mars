@@ -9,7 +9,7 @@ import __main__
 class Turret(pygame.sprite.Sprite):
     range = 10
     fire_rate = 10
-    damage= 1 
+    damage= 1
     def __init__(self, x, y, image):
         super().__init__()
         self.image = pygame.image.load(image)

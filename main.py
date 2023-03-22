@@ -1,7 +1,8 @@
 import pygame
 from player import Player
 from tilemap import Map,Tileset
-
+from bubbleshooter.bubbleshoot import bubble_shooter
+#from tower_defense.main import Game as TowerDefense
 pygame.init()
 
 
@@ -34,6 +35,11 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 player.velocity[1] = -10
+            if event.key == pygame.K_1:
+                score_bubble = bubble_shooter(screen_size=(display_width,display_height),screen=display)
+            if event.key == pygame.K_2:
+                pass
+                #TowerDefense(display=display)
         if event.type == pygame.MOUSEBUTTONDOWN:
             player.shoot(mouse_pos=pygame.mouse.get_pos())
     player.update(display)
