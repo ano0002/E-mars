@@ -2,9 +2,20 @@ import pygame
 import random
 from typing import List, Tuple
 # Initialize Pygame
+class Cannon:
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
 
-# Set the title of the game window
-pygame.display.set_caption("Bubble Shooter")
+    def update(self, mouse_x, mouse_y):
+        # Set the cannon position to the mouse position
+        self.x = mouse_x
+        self.y = mouse_y
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, (0, 0, 0), (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
 def bubble_shooter(screen_size:Tuple[int,int],screen:pygame.Surface):
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
@@ -12,42 +23,27 @@ def bubble_shooter(screen_size:Tuple[int,int],screen:pygame.Surface):
     # Set the screen background color
     background_color = (255, 255, 255)
 
-    # Define the bubble class
     class Bubble:
         def __init__(self, x, y, color, size):
             self.x = x
             self.y = y
             self.color = color
             self.size = size
-            
+
         def update(self):
             # Move the bubble down
             self.y += 5
-            
+
             # If the bubble goes off the bottom of the screen, reset it to the top
             if self.y > screen_size[1]:
                 self.y = 0
                 self.x = random.randint(0, screen_size[0])
-            
+
         def draw(self, screen):
             pygame.draw.circle(screen, self.color, (self.x, self.y), self.size)
-            
-    # Define the cannon class
-    class Cannon:
-        def __init__(self, x, y, width, height):
-            self.x = x
-            self.y = y
-            self.width = width
-            self.height = height
-            
-        def update(self, mouse_x, mouse_y):
-            # Set the cannon position to the mouse position
-            self.x = mouse_x
-            self.y = mouse_y
-            
-        def draw(self, screen):
-            pygame.draw.rect(screen, (0, 0, 0), (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
-            
+
+
+
     # Create a list of bubbles
     bubble_list = []
     for i in range(50):
@@ -57,7 +53,7 @@ def bubble_shooter(screen_size:Tuple[int,int],screen:pygame.Surface):
         size = 5
         bubble = Bubble(x, y, color, size)
         bubble_list.append(bubble)
-        
+
     # Create a cannon
     cannon = Cannon(0, 0, 20, 20)
 
@@ -103,9 +99,9 @@ def bubble_shooter(screen_size:Tuple[int,int],screen:pygame.Surface):
         # Update and draw the cannon
         cannon.update(mouse_x, mouse_y)
         cannon.draw(screen)
-        
+
         # Check if all the bubbles have been popped
-        if len(bubble_list) == 0:
+        if not bubble_list:
             font = pygame.font.Font(None, 36)
             text = font.render("You Win!", True, (0, 0, 0))
             text_rect = text.get_rect()
@@ -113,7 +109,7 @@ def bubble_shooter(screen_size:Tuple[int,int],screen:pygame.Surface):
             screen.blit(text, text_rect)
             pygame.display.update()
             # wait 3 seconds and then quit
-            for i in range(60 * 3):
+            for _ in range(60 * 3):
                 clock.tick(60)
             return True
 
