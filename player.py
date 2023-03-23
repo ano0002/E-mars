@@ -1,18 +1,25 @@
-import pygame,math
+import pygame, math
 from pygame.math import Vector2
 
+# Define the Player class
 class Player():
-    def __init__(self,tilemap,position = (400,200)) -> None:
+    # Define the constructor for the Player class
+    def __init__(self, tilemap, position=(400, 200)) -> None:
+        # Load and scale the player image
         self.image = pygame.transform.scale(pygame.image.load('./assets/player.png'), (32, 64))
+        # Set the player's rectangle
         self.rect = self.image.get_rect()
         self.rect.x = position[0]
         self.rect.y = position[1]
+        # Set the player's velocity and gravity
         self.velocity = [0, 0]
         self.gravity = 0.5
+        # Set the player's gun image, bullet count, and max bullets
         self.gun ='./assets/gun.png'
         self.max_bullets = 2
         self.bullet_count = self.max_bullets
         self.bullets = []
+        # Set the tilemap, power, and rectangle dictionaries for the player
         self.tilemap = tilemap
         self.power = 10
         self.rects = {
@@ -23,25 +30,31 @@ class Player():
             "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
             "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
         }
+        # Set the sounds dictionary for the player
         self.sounds = {
             "gunshot":pygame.mixer.Sound("./sfx/gunshot.wav"),
             "pickup":pygame.mixer.Sound("./sfx/pickup.wav")
         }
 
+    # Define a getter and setter for the gun attribute
     @property
     def gun(self):
         return self._gun
 
     @gun.setter
-    def gun(self,gun):
-        if hasattr(self,"_gun"):
+    def gun(self, gun):
+        # Play the pickup sound when a gun is picked up
+        if hasattr(self, "_gun"):
             pygame.mixer.Sound.play(self.sounds["pickup"])
-        self._gun =  pygame.transform.scale(pygame.image.load(gun), (25, 25))
+        # Scale and load the gun image
+        self._gun = pygame.transform.scale(pygame.image.load(gun), (25, 25))
 
-    def update(self,display):
-
+    # Define the update method for the Player class
+    def update(self, display):
+        # Move the player's rectangle horizontally based on its velocity
         self.rect.move_ip(self.velocity[0],0)
 
+        # Update the player's rectangle dictionaries
         self.rects = {
             "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
             "bottom":pygame.Rect(self.rect.centerx-2,self.rect.bottom,4,1),
@@ -50,8 +63,11 @@ class Player():
             "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
             "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
         }
+
+        # Store the last position of the tilemap
         last_pos = self.tilemap.offset.copy()[1]
 
+        # Move the tilemap vertically based on the player's velocity for every 8 pixels of movement
         for _ in range(int(abs(self.velocity[1])//8)):
             colliders = self.tilemap.get_colliders(display)
             if  self.rects["bottom"].collidelist(colliders)!=-1:
