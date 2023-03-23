@@ -36,7 +36,7 @@ while True:
             if event.key == pygame.K_SPACE:
                 player.velocity[1] = -10
             if event.key == pygame.K_1:
-                score_bubble = bubble_shooter(screen_size=(display_width,display_height),screen=display)
+                validated,score_bubble = bubble_shooter(screen_size=(display_width,display_height),screen=display)
             if event.key == pygame.K_2:
                 pass
                 #TowerDefense(display=display)

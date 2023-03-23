@@ -1,36 +1,40 @@
 import pygame
 import random
+import time
 from typing import List, Tuple
 # Initialize Pygame
 class Cannon:
-    def __init__(self, x, y, width, height):
+    def __init__(self, x:int, y:int, width:int, height:int) -> None:
         self.x = x
         self.y = y
         self.width = width
         self.height = height
 
-    def update(self, mouse_x, mouse_y):
+    def update(self, mouse_x:int, mouse_y:int) -> None:
         # Set the cannon position to the mouse position
         self.x = mouse_x
         self.y = mouse_y
 
-    def draw(self, screen):
+    def draw(self, screen:pygame.display) -> None:
         pygame.draw.rect(screen, (0, 0, 0), (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
-def bubble_shooter(screen_size:Tuple[int,int],screen:pygame.Surface):
+
+
+def bubble_shooter(screen_size:Tuple[int,int],screen:pygame.display) -> Tuple[bool, int]:
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
 
     # Set the screen background color
     background_color = (255, 255, 255)
+    start_time = int(time.time())
 
     class Bubble:
-        def __init__(self, x, y, color, size):
+        def __init__(self, x:int, y:int, color:Tuple[int,int,int], size:int) -> None:
             self.x = x
             self.y = y
             self.color = color
             self.size = size
 
-        def update(self):
+        def update(self) -> None:
             # Move the bubble down
             self.y += 5
 
@@ -39,18 +43,18 @@ def bubble_shooter(screen_size:Tuple[int,int],screen:pygame.Surface):
                 self.y = 0
                 self.x = random.randint(0, screen_size[0])
 
-        def draw(self, screen):
+        def draw(self, screen:pygame.display) -> None:
             pygame.draw.circle(screen, self.color, (self.x, self.y), self.size)
 
 
 
     # Create a list of bubbles
     bubble_list = []
-    for i in range(50):
+    size = 5
+    for _ in range(50):
         x = random.randint(0, screen_size[0])
         y = random.randint(0, screen_size[1])
         color = (255, 0, 0)
-        size = 5
         bubble = Bubble(x, y, color, size)
         bubble_list.append(bubble)
 
@@ -109,9 +113,14 @@ def bubble_shooter(screen_size:Tuple[int,int],screen:pygame.Surface):
             screen.blit(text, text_rect)
             pygame.display.update()
             # wait 3 seconds and then quit
+            end_time = int(time.time())
+            #difference in seconds
+            difference = end_time - start_time
             for _ in range(60 * 3):
                 clock.tick(60)
-            return True
+                cannon.update(mouse_x, mouse_y)
+                cannon.draw(screen)
+            return True, difference
 
         # Update the screen
         pygame.display.update()
