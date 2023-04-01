@@ -34,7 +34,7 @@ def detect_collision(mousepos, level, particle_engine):
                 else:
                     pygame.mixer.Sound("./sounds/stone.mp3").play()
                     if sprite.index in (12, 14, 20, 21, 22, 23, 24): particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (135,133,145))
-                    elif sprite.index in (1, 2, 3, 5, 6, 7, 8): particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (61,64,78))
+                    elif sprite.index in (1, 2, 3, 4, 5, 6, 7, 8): particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (61,64,78))
                     if sprite.index in (7, 12, 14): particle_engine.create_particles(mousepos[0], mousepos[1], 5, (221,164,126))
                     elif sprite.index == 8: particle_engine.create_particles(mousepos[0], mousepos[1], 5, (17,12,20))
                     elif sprite.index == 6: particle_engine.create_particles(mousepos[0], mousepos[1], 5, (227,85,60))
@@ -44,19 +44,48 @@ def detect_collision(mousepos, level, particle_engine):
                 break   # if tile has a blank tile next to it
 
 
+def display_ore(name, blocks_left, index, screen, screen_size):
+    image = pygame.image.load("./bloc_pics/"+name+".png")
+    factor = 3
+    old_width, old_height = image.get_size()
+    new_width = int(old_width * factor)
+    new_height = int(old_height * factor)
+    image = pygame.transform.scale(image, (new_width, new_height))
+    image_rect = image.get_rect()
+    image_rect.center = (screen_size[0]//10 + screen_size[0]//5 * index, screen_size[1]-screen_size[1]//20)
+    screen.blit(image, image_rect)
+
+    font = pygame.font.Font(None, 36)
+    text = font.render('x '+str(blocks_left[index]), True, (0, 0, 0))
+    text_rect = text.get_rect()
+    text_rect.center = (screen_size[0]//10 + 40 + screen_size[0]//5 * index, screen_size[1]-screen_size[1]//20)
+    screen.blit(text, text_rect)
+
+
+
 def detect_blocks_left(level, screen, screen_size, particle_engine):
-    blocks_left = 0
+    blocks_left = [2, 3, 2, 6, 2]   # (5, 6, 7?, 8, 12, 14) indexes of rare blocks
     for sprite in level.terrain_sprites:
-        if sprite.index in (5, 6, 7, 8, 12, 14): blocks_left += 1
-    if blocks_left == 0:
+        if sprite.index == 5:   # gold
+            blocks_left[0] -= 1
+        elif sprite.index == 6:   # redstone
+            blocks_left[1] -= 1
+        elif sprite.index == 8:   # coal
+            blocks_left[2] -= 1
+        elif sprite.index in (7,12):   # iron 
+            blocks_left[3] -= 1
+        elif sprite.index == 14:   # copper
+            blocks_left[4] -= 1
+
+    if blocks_left == [2, 3, 2, 6, 2]:
         font = pygame.font.Font(None, 36)
         text = font.render("New gun Crafted!", True, (0, 0, 0))
         text_rect = text.get_rect()
         text_rect.center = (screen_size[0] // 2, screen_size[1] // 2)
         screen.blit(text, text_rect)
+        
         image = pygame.image.load('./bloc_pics/gun.png')
-
-        factor = 5
+        factor = 4.5
         old_width, old_height = image.get_size()
         new_width = int(old_width * factor)
         new_height = int(old_height * factor)
@@ -64,6 +93,13 @@ def detect_blocks_left(level, screen, screen_size, particle_engine):
         image_rect = image.get_rect()
         image_rect.center = (screen_size[0] // 2, screen_size[1] // 2 + 50)
         screen.blit(image, image_rect)
+
         color = (randint(0, 255), randint(0, 255), randint(0, 255))
-        particle_engine.create_particles(image_rect.center[0], image_rect.center[1], 1, color)
-        
+        particle_engine.create_particles(image_rect.center[0], image_rect.center[1], 1, color, 2)
+
+    else :
+        display_ore("gold", blocks_left, 0, screen, screen_size)
+        display_ore("redstone", blocks_left, 1, screen, screen_size)
+        display_ore("coal", blocks_left, 2, screen, screen_size)
+        display_ore("iron", blocks_left, 3, screen, screen_size)
+        display_ore("copper", blocks_left, 4, screen, screen_size)

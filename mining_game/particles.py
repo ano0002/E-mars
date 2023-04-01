@@ -3,14 +3,14 @@ from random import randint, uniform
 from math import pi, cos, sin
 
 class Particle:
-    def __init__(self, x, y, size, speed, color):
+    def __init__(self, x, y, size, speed, color, gravity=3):
         self.x = x
         self.y = y
         self.size = size
         self.color = color   # color should be the same as the block that was broken
         self.speed = speed
         self.angle = uniform(0, 2 * pi)
-        self.gravity = 3
+        self.gravity = gravity
         
     def update(self):
         self.x += cos(self.angle) * self.speed
@@ -37,11 +37,11 @@ class ParticleEngine:
         for particle in self.particles:
             particle.draw(screen)
             
-    def create_particles(self, x, y, num_particles, color):
+    def create_particles(self, x, y, num_particles, color, gravity=3):
         for i in range(num_particles):
             size = randint(5, 20)
             speed = uniform(1, 5)
-            particle = Particle(x, y, size, speed, color)
+            particle = Particle(x, y, size, speed, color, gravity)
             self.particles.append(particle)
             if len(self.particles) > self.max_particles:
                 self.particles.pop(0)
