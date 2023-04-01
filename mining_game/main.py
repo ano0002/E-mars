@@ -6,9 +6,9 @@ from particles import ParticleEngine
 
 
 pygame.init()
-screen_size = (1400,800)
+screen_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
 screen_color = (117,64,36)  #(185,110,84)
-screen = pygame.display.set_mode(screen_size)
+screen = pygame.display.set_mode(screen_size, pygame.FULLSCREEN)
 pygame.display.set_caption("MINING ALL DAY")
 clock = pygame.time.Clock()
 
@@ -35,8 +35,6 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             detect_collision(mouse_pos, level, particle_engine)
-
-
 
     level.run()   # Blocks
 

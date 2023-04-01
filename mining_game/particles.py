@@ -2,6 +2,7 @@ import pygame
 from random import randint, uniform
 from math import pi, cos, sin
 
+
 class Particle:
     def __init__(self, x, y, size, speed, color, gravity=3):
         self.x = x
@@ -22,6 +23,7 @@ class Particle:
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, (self.x - self.size / 2, self.y - self.size / 2, self.size, self.size))
         
+
 class ParticleEngine:
     def __init__(self, max_particles):
         self.max_particles = max_particles

@@ -45,6 +45,8 @@ def detect_collision(mousepos, level, particle_engine):
 
 
 def display_ore(name, blocks_left, index, screen, screen_size):
+    x = screen_size[0]//20 + screen_size[0]//6 * index
+    y = screen_size[1]-screen_size[1]//20
     image = pygame.image.load("./bloc_pics/"+name+".png")
     factor = 3
     old_width, old_height = image.get_size()
@@ -52,16 +54,14 @@ def display_ore(name, blocks_left, index, screen, screen_size):
     new_height = int(old_height * factor)
     image = pygame.transform.scale(image, (new_width, new_height))
     image_rect = image.get_rect()
-    image_rect.center = (screen_size[0]//10 + screen_size[0]//5 * index, screen_size[1]-screen_size[1]//20)
+    image_rect.center = (x,y)
     screen.blit(image, image_rect)
 
     font = pygame.font.Font(None, 36)
     text = font.render('x '+str(blocks_left[index]), True, (0, 0, 0))
     text_rect = text.get_rect()
-    text_rect.center = (screen_size[0]//10 + 40 + screen_size[0]//5 * index, screen_size[1]-screen_size[1]//20)
+    text_rect.center = (x+40,y)
     screen.blit(text, text_rect)
-
-
 
 def detect_blocks_left(level, screen, screen_size, particle_engine):
     blocks_left = [2, 3, 2, 6, 2]   # (5, 6, 7?, 8, 12, 14) indexes of rare blocks
