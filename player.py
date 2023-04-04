@@ -6,8 +6,13 @@ class Player():
     # Define the constructor for the Player class
     def __init__(self, tilemap, position=(400, 200)) -> None:
         # Load and scale the player image
-        self.image = pygame.transform.scale(pygame.image.load('./assets/player.png'), (32, 64))
-        self.right, self.left = True, False
+        self.list_images = [pygame.transform.scale(pygame.image.load('./assets/player1.png'),(32, 64)), 
+                            pygame.transform.scale(pygame.image.load('./assets/player2.png'), (32, 64)),
+                            pygame.transform.scale(pygame.image.load('./assets/player3.png'), (32, 64)),
+                            pygame.transform.scale(pygame.image.load('./assets/player4.png'), (32, 64)),]
+        self.image_index = 0
+        self.image = self.list_images[self.image_index]
+        self.facing_right, self.facing_left = True, False
         # Set the player's rectangle
         self.rect = self.image.get_rect()
         self.rect.x = position[0]
@@ -151,11 +156,11 @@ class Player():
         screen.blit(self.image, self.rect)
         pos = pygame.mouse.get_pos()
         angle = 360-math.atan2(pos[1]-self.rect.centery,pos[0]-self.rect.centerx)*180/math.pi
-        if self.left and 270 < angle and angle < 450 :
-            self.right, self.left = True, False
+        if self.facing_left and 270 < angle and angle < 450 :
+            self.facing_right, self.facing_left = True, False
             self.image = pygame.transform.flip(self.image, True, False)
-        elif self.right and not (270 < angle and angle < 450):
-            self.right, self.left = False, True
+        elif self.facing_right and not (270 < angle and angle < 450):
+            self.facing_right, self.facing_left = False, True
             self.image = pygame.transform.flip(self.image, True, False)
         """
         if not (270 < angle and angle < 450):   # attempt to flip gun
