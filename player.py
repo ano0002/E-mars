@@ -7,6 +7,7 @@ class Player():
     def __init__(self, tilemap, position=(400, 200)) -> None:
         # Load and scale the player image
         self.image = pygame.transform.scale(pygame.image.load('./assets/player.png'), (32, 64))
+        self.right, self.left = True, False
         # Set the player's rectangle
         self.rect = self.image.get_rect()
         self.rect.x = position[0]
@@ -150,6 +151,17 @@ class Player():
         screen.blit(self.image, self.rect)
         pos = pygame.mouse.get_pos()
         angle = 360-math.atan2(pos[1]-self.rect.centery,pos[0]-self.rect.centerx)*180/math.pi
+        if self.left and 270 < angle and angle < 450 :
+            self.right, self.left = True, False
+            self.image = pygame.transform.flip(self.image, True, False)
+        elif self.right and not (270 < angle and angle < 450):
+            self.right, self.left = False, True
+            self.image = pygame.transform.flip(self.image, True, False)
+        """
+        if not (270 < angle and angle < 450):   # attempt to flip gun
+            angle = -angle
+            rotimage = pygame.transform.flip(rotimage, False, True)
+        """
         rotimage = pygame.transform.rotate(self.gun,angle)
         rect = rotimage.get_rect(center=self.rect.center)
         screen.blit(rotimage, rect)
