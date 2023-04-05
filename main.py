@@ -21,6 +21,11 @@ display_width = playing_area.width*16
 display_height = playing_area.height*16
 display = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
 
+# load the icon image
+icon = pygame.image.load("./assets/icon.png")
+# set the taskbar icon
+pygame.display.set_icon(icon)
+
 #set the player to the middle of the screen
 player.rect.center = (display_width/2,2*display_height/3)
 
