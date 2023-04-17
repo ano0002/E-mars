@@ -48,8 +48,7 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int]) -> tuple:
                     detect_collision(mouse_pos, level, particle_engine)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        pygame.quit()
-                        exit()
+                        return
 
         level.run()   # Blocks
 

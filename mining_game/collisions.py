@@ -15,11 +15,11 @@ def detect_collision(mousepos, level, particle_engine):
                 break   # if tile is already blank
             
             elif sprite.index == 0:
-                pygame.mixer.Sound("./sounds/bedrock.mp3").play()
+                pygame.mixer.Sound("./mining_game/sounds/bedrock.mp3").play()
                 break   # if tile is bedrock
 
             elif sprite.index == 28:
-                pygame.mixer.Sound("./sounds/dirt.mp3").play()
+                pygame.mixer.Sound("./mining_game/sounds/dirt.mp3").play()
                 sprite.index = -1
                 sprite.image = pygame.Surface((0, 0))
                 particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (143,92,51)) 
@@ -28,11 +28,11 @@ def detect_collision(mousepos, level, particle_engine):
 
             elif (level.terrain_sprites.sprites()[i+1].index == -1 or level.terrain_sprites.sprites()[i-1].index == -1 or level.terrain_sprites.sprites()[i+bt].index == -1  or level.terrain_sprites.sprites()[i-bt].index == -1):
                 if sprite.index in (25, 26, 27):
-                    pygame.mixer.Sound("./sounds/dirt.mp3").play()
+                    pygame.mixer.Sound("./mining_game/sounds/dirt.mp3").play()
                     particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (143,92,51))
                     if sprite.index in (25, 26): particle_engine.create_particles(mousepos[0], mousepos[1], 5, (126,119,128))
                 else:
-                    pygame.mixer.Sound("./sounds/stone.mp3").play()
+                    pygame.mixer.Sound("./mining_game/sounds/stone.mp3").play()
                     if sprite.index in (12, 14, 20, 21, 22, 23, 24): particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (135,133,145))
                     elif sprite.index in (1, 2, 3, 4, 5, 6, 7, 8): particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (61,64,78))
                     if sprite.index in (7, 12, 14): particle_engine.create_particles(mousepos[0], mousepos[1], 5, (221,164,126))
@@ -57,7 +57,7 @@ def display_ore(name, blocks_left, index, screen, screen_size):
     image_rect.center = (x,y)
     screen.blit(image, image_rect)
     font = pygame.font.Font(None, 36)                       # Ore amount
-    text = font.render('x '+str(blocks_left[index]), True, (0, 0, 0))
+    text = font.render(f'x {str(blocks_left[index])}', True, (0, 0, 0))
     text_rect = text.get_rect()
     text_rect.center = (x+40,y)
     screen.blit(text, text_rect)
