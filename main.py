@@ -48,6 +48,8 @@ while True:
                 validated,score_bubble = bubble_shooter(screen_size=(display_width,display_height),screen=display)
             if event.key == pygame.K_2:
                 mining_game(screen=display,screen_size=(display_width,display_height))
+                #show back the default cursor
+                pygame.mouse.set_cursor((8, 8), (0, 0), (1, 1, 1, 1, 1, 1, 1, 1), (1, 1, 1, 1, 1, 1, 1, 1))
                 #TowerDefense(display=display)
         if event.type == pygame.MOUSEBUTTONDOWN:
             player.shoot(mouse_pos=pygame.mouse.get_pos())
