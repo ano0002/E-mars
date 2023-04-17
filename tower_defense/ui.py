@@ -41,6 +41,38 @@ class Button(pygame.sprite.Sprite):
             self.image.fill(self.color)
         self.image.blit(self.text_image, self.text_rect)
     
+class Text(pygame.sprite.Sprite):
+    def __init__(self, x, y, text="", text_color=(0,0,0), font_size=30):
+        super().__init__()
+        self.font = pygame.font.SysFont("Arial", font_size)
+        self.text = text
+        self.text_color = text_color
+        self.text_image = self.font.render(text, True, text_color)
+        self.text_rect = self.text_image.get_rect()
+        self.text_rect.x = x
+        self.text_rect.y = y
+        self.image = self.text_image
+        self.rect = self.text_rect
+    
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
+    
+    @property
+    def text(self):
+        return self._text
+    
+    @text.setter
+    def text(self, value):
+        if hasattr(self, "_text"):
+            self._text = value
+            self.text_image = self.font.render(value, True, self.text_color)
+            self.text_rect = self.text_image.get_rect()
+            self.text_rect.x = self.rect.x
+            self.text_rect.y = self.rect.y
+            self.image = self.text_image
+            self.rect = self.text_rect
+        else:
+            self._text = value
         
 if __name__ == "__main__":
     pygame.init()
@@ -57,6 +89,8 @@ if __name__ == "__main__":
     for i in range(10):
         buttons.add(Button(100, 50*i+10*i+5, 100, 50, text="Test",on_click=func))
 
+    text = Text(400, 100, text="Test",text_color=(255,255,255), font_size=50)
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -71,4 +105,5 @@ if __name__ == "__main__":
         display.fill((0,0,0))
         buttons.update(pygame.mouse.get_pos())
         buttons.draw(display)
+        text.draw(display)
         pygame.display.update()

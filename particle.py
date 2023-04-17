@@ -3,9 +3,10 @@
 
 import pygame,random
 from pygame.math import Vector2
+from typing import Tuple, List
 
 
-def circle_surf(radius, color,alpha):
+def circle_surf(radius, color, alpha):
     surf = pygame.Surface((radius * 2, radius * 2))
     pygame.draw.circle(surf, color, (radius, radius), radius)
     surf.set_alpha(alpha)
@@ -24,7 +25,7 @@ class Particle:
         self.glow_radius = glow_radius
         self.alpha = 255
         self.glow_color = glow_color
-    
+
     def update(self):
         self.pos += self.vel
         self.vel[1] += self.gravity
@@ -33,7 +34,7 @@ class Particle:
         self.timer -= 1
         if self.timer <= 0:
             self.alive = False
-    
+
     def draw(self,screen):
         if self.glow_radius > 0:
             surf = circle_surf(self.glow_radius, self.glow_color,self.alpha)
@@ -53,7 +54,7 @@ class Particle_Emitter:
         self.timer = timer
         self.glow_radius = glow_radius
         self.glow_color = glow_color
-        
+
     def update(self):
         self.frame += 1
         vel = self.vel.copy()
@@ -63,28 +64,43 @@ class Particle_Emitter:
             vel[1] = self.vel[1]()
         if self.frame % self.rate == 0:
             self.particles.append(Particle(self.pos, Vector2(vel), self.timer, self.color, self.radius, self.gravity,self.glow_color, self.glow_radius))
-        
+
         for particle in self.particles:
             particle.update()
             if not particle.alive:
                 self.particles.remove(particle)
                 del particle
-    
+
     def draw(self,screen):
         for particle in self.particles:
             particle.draw(screen)
 
 class Torch(Particle_Emitter):
     def __init__(self, tile_pos,offset):
-        super().__init__(rate =1, pos = list(i*16 for i in tile_pos),
-                               vel = (lambda : random.random()*4-2, lambda : -random.random()*4-2),
-                               timer = 20,radius = 1,
-                               glow_radius=5,color=(255,0,0),glow_color=(50,0,0))
+        super().__init__(
+            rate=1,
+            pos=[i * 16 for i in tile_pos],
+            vel=(
+                lambda: random.random() * 4 - 2,
+                lambda: -random.random() * 4 - 2,
+            ),
+            timer=20,
+            radius=1,
+            glow_radius=5,
+            color=(255, 0, 0),
+            glow_color=(50, 0, 0),
+        )
         self.offset = offset
         self.tile_pos = tile_pos
     def update(self,offset):
         self.offset = offset
-        self.pos = list(i*16 for i in (self.tile_pos[0]-self.offset[0],self.tile_pos[1]-self.offset[1]))
+        self.pos = [
+            i * 16
+            for i in (
+                self.tile_pos[0] - self.offset[0],
+                self.tile_pos[1] - self.offset[1],
+            )
+        ]
         super().update()
 
 if __name__ == '__main__':

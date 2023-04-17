@@ -1,21 +1,32 @@
 import pygame
 import random
+import time
+from typing import List, Tuple
 
 # Initialize Pygame
-pygame.init()
+class Cannon:
+    def __init__(self, x:int, y:int, width:int, height:int) -> None:
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
 
-# Set the width and height of the screen (width, height).
-screen_size = (700, 500)
-screen = pygame.display.set_mode(screen_size)
+    def update(self, mouse_x:int, mouse_y:int) -> None:
+        # Set the cannon position to the mouse position
+        self.x = mouse_x
+        self.y = mouse_y
 
-# Set the title of the game window
-pygame.display.set_caption("Bubble Shooter")
+    def draw(self, screen:pygame.display) -> None:
+        pygame.draw.rect(screen, (0, 0, 0), (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
 
-# Used to manage how fast the screen updates
-clock = pygame.time.Clock()
 
-# Set the screen background color
-background_color = (255, 255, 255)
+def bubble_shooter(screen_size:Tuple[int,int],screen:pygame.display) -> Tuple[bool, int]:
+    # Used to manage how fast the screen updates
+    clock = pygame.time.Clock()
+
+    # Set the screen background color
+    background_color = (255, 255, 255)
+    start_time = int(time.time())
 
 # Define the bubble class
 class Bubble:
@@ -27,7 +38,7 @@ class Bubble:
         
     def update(self):
         # Move the bubble down
-        self.y += 10- len(bubble_list)/10
+        self.y += 5
         
         # If the bubble goes off the bottom of the screen, reset it to the top
         if self.y > screen_size[1]:
@@ -69,38 +80,38 @@ cannon = Cannon(0, 0, 20, 20)
 
 
 
-# Game loop
-running = True
-cannon_color=(0,0,0)
-cannon_color_chage_time=0
+    # Game loop
+    running = True
+    cannon_color=(0,0,0)
+    cannon_color_chage_time=0
 
-while running:
-    # Handle events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-            
-    # Clear the screen
-    screen.fill(background_color)
-    
-    # Get the mouse position
-    mouse_x, mouse_y = pygame.mouse.get_pos()
-    
-    
-    # Update and draw the bubbles
-    for bubble in bubble_list:
-        bubble.update()
-        bubble.draw(screen)
-        
-        # Check if the cannon collides with the bubble
-        if cannon.x - cannon.width / 2 < bubble.x < cannon.x + cannon.width / 2 and cannon.y - cannon.height / 2 < bubble.y < cannon.y + cannon.height / 2:
-            bubble_list.remove(bubble)
-            cannon.color = (255, 255, 255)
-            cannon_color_change_time = pygame.time.get_ticks()
-            
-    # Check if it's time to change the cannon back to its original color
-    if cannon_color != (0, 0, 0) and pygame.time.get_ticks() - cannon_color_change_time >= 3000:
-        cannon_color = (0, 0, 0)
+    while running:
+        # Handle events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        # Clear the screen
+        screen.fill(background_color)
+
+        # Get the mouse position
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+
+
+        # Update and draw the bubbles
+        for bubble in bubble_list:
+            bubble.update()
+            bubble.draw(screen)
+
+            # Check if the cannon collides with the bubble
+            if cannon.x - cannon.width / 2 < bubble.x < cannon.x + cannon.width / 2 and cannon.y - cannon.height / 2 < bubble.y < cannon.y + cannon.height / 2:
+                bubble_list.remove(bubble)
+                cannon.color = (255, 255, 255)
+                cannon_color_change_time = pygame.time.get_ticks()
+
+        # Check if it's time to change the cannon back to its original color
+        if cannon_color != (0, 0, 0) and pygame.time.get_ticks() - cannon_color_change_time >= 3000:
+            cannon_color = (0, 0, 0)
 
     # Update the cannon color
     cannon.color = cannon_color
@@ -117,13 +128,11 @@ while running:
         text_rect.center = (screen_size[0] // 2, screen_size[1] // 2)
         screen.blit(text, text_rect)
 
-    # Update the screen
-    pygame.display.update()
+        # Update the screen
+        pygame.display.update()
 
-    # Set the frame rate
-    clock.tick(60)
+        # Set the frame rate
+        clock.tick(60)
 
-# Quit the game
-pygame.quit()
-
-
+    # Quit the game
+    pygame.quit()
