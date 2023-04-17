@@ -1,5 +1,5 @@
 from csv import reader
-from collisions import bt
+from .collisions import bt
 
 
 def import_csv_layout(path):

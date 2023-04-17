@@ -6,7 +6,7 @@ class Pickaxe:
         self.y = y
         self.width = width
         self.height = height
-        self.image = pygame.image.load("./bloc_pics/iron_pickaxe.png")
+        self.image = pygame.image.load("./mining_game/bloc_pics/iron_pickaxe.png")
         
 
     def update(self, mouse_x, mouse_y):

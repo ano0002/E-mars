@@ -47,7 +47,7 @@ def detect_collision(mousepos, level, particle_engine):
 def display_ore(name, blocks_left, index, screen, screen_size):
     x = screen_size[0]//20 + screen_size[0]//6 * index      # Coordinates of the ore image
     y = screen_size[1]-screen_size[1]//20
-    image = pygame.image.load("./bloc_pics/"+name+".png")   # Ore image
+    image = pygame.image.load(f"./mining_game/bloc_pics/{name}.png")
     factor = 3
     old_width, old_height = image.get_size()
     new_width = int(old_width * factor)
@@ -83,7 +83,7 @@ def detect_blocks_left(level, screen, screen_size, particle_engine):
         text_rect = text.get_rect()
         text_rect.center = (screen_size[0] // 2, screen_size[1] // 2)
         screen.blit(text, text_rect)
-        image = pygame.image.load('./bloc_pics/gun.png')              # Image of new gun
+        image = pygame.image.load('./mining_game/bloc_pics/gun.png')              # Image of new gun
         factor = 4.5
         old_width, old_height = image.get_size()
         new_width = int(old_width * factor)
