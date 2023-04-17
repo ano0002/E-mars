@@ -11,4 +11,5 @@ while playing:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             playing = False
+    
     pygame.display.flip()
