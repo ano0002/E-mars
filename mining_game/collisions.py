@@ -57,7 +57,7 @@ def display_ore(name, blocks_left, index, screen, screen_size):
     image_rect.center = (x,y)
     screen.blit(image, image_rect)
     font = pygame.font.Font(None, 36)                       # Ore amount
-    text = font.render(f'x {str(blocks_left[index])}', True, (0, 0, 0))
+    text = font.render('x '+str(blocks_left[index]), True, (0, 0, 0))
     text_rect = text.get_rect()
     text_rect.center = (x+40,y)
     screen.blit(text, text_rect)

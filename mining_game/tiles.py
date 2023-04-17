@@ -1,6 +1,6 @@
 import pygame 
 
-tile_size = 57
+tile_size = 65
 
 class Tile(pygame.sprite.Sprite):
 	def __init__(self,pos,index,tileset):
