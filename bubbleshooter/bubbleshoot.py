@@ -27,7 +27,7 @@ class Bubble:
         
     def update(self):
         # Move the bubble down
-        self.y += 5
+        self.y += 10- len(bubble_list)/10
         
         # If the bubble goes off the bottom of the screen, reset it to the top
         if self.y > screen_size[1]:
@@ -112,7 +112,7 @@ while running:
     # Check if all the bubbles have been popped
     if len(bubble_list) == 0:
         font = pygame.font.Font(None, 36)
-        text = font.render("You Win!", True, (0, 0, 0))
+        text = font.render("You Won!", True, (0, 0, 0))
         text_rect = text.get_rect()
         text_rect.center = (screen_size[0] // 2, screen_size[1] // 2)
         screen.blit(text, text_rect)
