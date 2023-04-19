@@ -54,53 +54,53 @@ class Map:
         self.calculate_borders()
     
     def calculate_borders(self):
-        self.test_map = [line.copy() for line in self.map]
-        for i,line in enumerate(self.map):
-            for j,elem in enumerate(line):
-                for center_piece in (205,117,29):
-                    if elem == center_piece:
-                        if i == 0 or j == 0 or i == len(self.map)-1 or j == len(line)-1 :
-                            continue
-                        if (self.test_map[i+1][j] == center_piece and 
-                            self.test_map[i-1][j] == center_piece and
-                            self.test_map[i][j+1] == center_piece and
-                            self.test_map[i][j-1] == center_piece):
-                                if self.test_map[i+1][j+1] != center_piece:
-                                    self.map[i][j] = center_piece-20
-                                if self.test_map[i+1][j-1] != center_piece:
-                                    self.map[i][j] = center_piece-19
-                                if self.test_map[i-1][j+1] != center_piece:
-                                    self.map[i][j] = center_piece+2
-                                if self.test_map[i-1][j-1] != center_piece:
-                                    self.map[i][j] = center_piece+3
-                        elif (self.test_map[i+1][j] == center_piece and 
-                            self.test_map[i-1][j] == center_piece and
-                            self.test_map[i][j+1] == center_piece):
-                                self.map[i][j] = center_piece-1
-                        elif (self.test_map[i+1][j] == center_piece and 
-                            self.test_map[i-1][j] == center_piece and
-                            self.test_map[i][j-1] == center_piece):
-                                self.map[i][j] = center_piece+1
-                        elif (self.test_map[i+1][j] == center_piece and 
-                            self.test_map[i][j+1] == center_piece and
-                            self.test_map[i][j-1] == center_piece):
-                                self.map[i][j] =  center_piece-22
-                        elif (self.test_map[i-1][j] == center_piece and 
-                            self.test_map[i][j+1] == center_piece and
-                            self.test_map[i][j-1] == center_piece):
-                                self.map[i][j] = center_piece+22
-                        elif (self.test_map[i+1][j] == center_piece and 
-                            self.test_map[i][j-1] == center_piece):
-                                self.map[i][j] = center_piece-21
-                        elif (self.test_map[i+1][j] == center_piece and 
-                            self.test_map[i][j+1] == center_piece):
-                                self.map[i][j] = center_piece-23
-                        elif (self.test_map[i-1][j] == center_piece and 
-                            self.test_map[i][j-1] == center_piece):
-                                self.map[i][j] = center_piece+23
-                        elif (self.test_map[i-1][j] == center_piece and 
-                            self.test_map[i][j+1] == center_piece):
-                                self.map[i][j] = center_piece+21
+        test_map = [line.copy() for line in self.tiles]
+        for tile in self.foreground:
+            i,j = tile.default_pos[0]//16,tile.default_pos[1]//16 
+            for center_piece in (205,117,29):
+                if tile.id == center_piece:
+                    if i == 0 or j == 0 or i == self.width-1 or j == self.height-1 :
+                        continue
+                    if (test_map[i+1][j] == center_piece and 
+                        test_map[i-1][j] == center_piece and
+                        test_map[i][j+1] == center_piece and
+                        test_map[i][j-1] == center_piece):
+                            if test_map[i+1][j+1] != center_piece:
+                                self.map[i][j] = center_piece-20
+                            if test_map[i+1][j-1] != center_piece:
+                                self.map[i][j] = center_piece-19
+                            if test_map[i-1][j+1] != center_piece:
+                                self.map[i][j] = center_piece+2
+                            if test_map[i-1][j-1] != center_piece:
+                                self.map[i][j] = center_piece+3
+                    elif (test_map[i+1][j] == center_piece and 
+                        test_map[i-1][j] == center_piece and
+                        test_map[i][j+1] == center_piece):
+                            self.map[i][j] = center_piece-1
+                    elif (test_map[i+1][j] == center_piece and 
+                        test_map[i-1][j] == center_piece and
+                        test_map[i][j-1] == center_piece):
+                            self.map[i][j] = center_piece+1
+                    elif (test_map[i+1][j] == center_piece and 
+                        test_map[i][j+1] == center_piece and
+                        test_map[i][j-1] == center_piece):
+                            self.map[i][j] =  center_piece-22
+                    elif (test_map[i-1][j] == center_piece and 
+                        test_map[i][j+1] == center_piece and
+                        test_map[i][j-1] == center_piece):
+                            self.map[i][j] = center_piece+22
+                    elif (test_map[i+1][j] == center_piece and 
+                        test_map[i][j-1] == center_piece):
+                            self.map[i][j] = center_piece-21
+                    elif (test_map[i+1][j] == center_piece and 
+                        test_map[i][j+1] == center_piece):
+                            self.map[i][j] = center_piece-23
+                    elif (test_map[i-1][j] == center_piece and 
+                        test_map[i][j-1] == center_piece):
+                            self.map[i][j] = center_piece+23
+                    elif (test_map[i-1][j] == center_piece and 
+                        test_map[i][j+1] == center_piece):
+                            self.map[i][j] = center_piece+21
                             
                 
         

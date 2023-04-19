@@ -28,11 +28,19 @@ class Tile(pygame.sprite.Sprite):
         self.pos = pos
         self.tileset = tileset
         self.id = tile_id
-        self.image = self.tileset.get_tile(tile_id)
-        self.rect = self.image.get_rect(top=pos[1], left=pos[0])
         self.tile_size = self.tileset.get_tile_size()
         self.default_pos = pos.copy()
 
+    @property
+    def id(self):
+        return self._id
+    
+    @id.setter
+    def id(self, value):
+        self._id = value
+        self.image = self.tileset.get_tile(value)
+        self.rect = self.image.get_rect(top=self.pos[1], left=self.pos[0])
+    
     @property
     def x(self):
         return self.pos[0]
@@ -50,7 +58,7 @@ class Tile(pygame.sprite.Sprite):
     def y(self, value):
         self.pos[1] = value
         self.rect.y = value
-        
+    
     def reset_pos(self):
         self.x = self.default_pos[0]
         self.y = self.default_pos[1]
@@ -70,6 +78,8 @@ class Tile(pygame.sprite.Sprite):
             transformed_image = pygame.transform.scale(self.image,(32,32))
             screen.blit(transformed_image, (self.x-self.tile_size/2, self.y-self.tile_size+effect))
     
+    def __repr__(self) -> str:
+        return super().__repr__() + f"({self.id})"
 
 def id_to_tile(tile_id,x,y,tileset): 
     tile_size = tileset.get_tile_size()
@@ -138,61 +148,9 @@ class Tilemap():
                         self.width = len(line)
                     
         self.height = len(self.tiles)
-        self.calculate_borders()
-    
-    def calculate_borders(self):
-        test_map = self.tiles.copy()
-        for i,line in enumerate(self.tiles):
-            for j,elem in enumerate(line):
-                for center_piece in (205,117,29):
-                    if elem.id == center_piece:
-                        if i == 0 or j == 0 or i == len(self.map)-1 or j == len(line)-1 :
-                            continue
-                        if (test_map[i+1][j] == center_piece and 
-                            test_map[i-1][j] == center_piece and
-                            test_map[i][j+1] == center_piece and
-                            test_map[i][j-1] == center_piece):
-                                if test_map[i+1][j+1] != center_piece:
-                                    self.foreground[i].id = center_piece-20
-                                if test_map[i+1][j-1] != center_piece:
-                                    self.foreground[i].id = center_piece-19
-                                if test_map[i-1][j+1] != center_piece:
-                                    self.foreground[i].id = center_piece+2
-                                if test_map[i-1][j-1] != center_piece:
-                                    self.foreground[i].id = center_piece+3
-                        elif (test_map[i+1][j] == center_piece and 
-                            test_map[i-1][j] == center_piece and
-                            test_map[i][j+1] == center_piece):
-                                self.foreground[i].id = center_piece-1
-                        elif (test_map[i+1][j] == center_piece and 
-                            test_map[i-1][j] == center_piece and
-                            test_map[i][j-1] == center_piece):
-                                self.foreground[i].id = center_piece+1
-                        elif (test_map[i+1][j] == center_piece and 
-                            test_map[i][j+1] == center_piece and
-                            test_map[i][j-1] == center_piece):
-                                self.foreground[i].id =  center_piece-22
-                        elif (test_map[i-1][j] == center_piece and 
-                            test_map[i][j+1] == center_piece and
-                            test_map[i][j-1] == center_piece):
-                                self.foreground[i].id = center_piece+22
-                        elif (test_map[i+1][j] == center_piece and 
-                            test_map[i][j-1] == center_piece):
-                                self.foreground[i].id = center_piece-21
-                        elif (test_map[i+1][j] == center_piece and 
-                            test_map[i][j+1] == center_piece):
-                                self.foreground[i].id = center_piece-23
-                        elif (test_map[i-1][j] == center_piece and 
-                            test_map[i][j-1] == center_piece):
-                                self.foreground[i].id = center_piece+23
-                        elif (test_map[i-1][j] == center_piece and 
-                            test_map[i][j+1] == center_piece):
-                                self.foreground[i].id = center_piece+21
-                            
-
     def draw(self, surface):
         self.frame += 1
-        for line in self.tiles:
+        for line in self.foreground:
             for tile in line:
                 if tile != None:
                     tile.draw(surface,self.frame)
@@ -222,6 +180,7 @@ class Tilemap():
         for tile in self.tiles:
             if tile.x == x and tile.y == y:
                 return tile
+            
         return None
 
     def get_tile_by_map_coord(self, x, y):
@@ -243,20 +202,30 @@ class Tilemap():
                         colliders.append(tile.rect)
         return colliders
 
+    def get_interactibles(self):
+        interactibles = []
+        for line in self.foreground:
+            for tile in line:
+                if tile != None:
+                    if tile.id in {66,67}:
+                        interactibles.append(tile)
+        return interactibles
+
 if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((1920,1080), pygame.FULLSCREEN)
     tile_set = TileSet(".\\tiled_map\\terrain.png", 16)
     tile_map = Tilemap(".\\tiled_map\\map", tile_set)
     running = True
-    print(sum((len(x) for x in tile_map.tiles)))
-    print(len(tile_map.get_colliders()))
+    clock = pygame.time.Clock()
+    print(tile_map.foreground)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEWHEEL:
                 tile_map.offset = (tile_map.offset[0], tile_map.offset[1] + event.y*16)
-        screen.fill((0, 0, 0))
+        screen.fill((33,31,48))
         tile_map.draw(screen)
         pygame.display.flip()
+        clock.tick(60)
