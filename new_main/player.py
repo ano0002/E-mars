@@ -24,14 +24,6 @@ class Player(pygame.sprite.Sprite):# Load and scale the player image
         # Set the tilemap, power, and rectangle dictionaries for the player
         self.tilemap = tilemap
         self.power = 10
-        self.rects = {
-            "top":pygame.Rect(self.rect.x,self.rect.y,self.rect.width,1),
-            "bottom":pygame.Rect(self.rect.centerx-1,self.rect.bottom,2,1), 
-            "bottom-left":pygame.Rect(self.rect.x,self.rect.bottom,1,1),
-            "bottom-right":pygame.Rect(self.rect.right,self.rect.bottom,1,1),
-            "left":pygame.Rect(self.rect.x,self.rect.y,1,self.rect.height),
-            "right":pygame.Rect(self.rect.right,self.rect.y,1,self.rect.height)
-        }
         # Set the sounds dictionary for the player
         self.sounds = {
             "gunshot":pygame.mixer.Sound("./sfx/gunshot.wav"),
@@ -79,18 +71,36 @@ class Player(pygame.sprite.Sprite):# Load and scale the player image
         self.bullets.draw(surface)
         
     def update(self):
+        colliders = self.tilemap.get_colliders()
         self.velocity[1] -= self.gravity
         
         if self.velocity[1] > 0:
-            if raycast(self.rects["top"].center,self.tilemap.get_colliders(),(0,1),abs(self.velocity[1])):
+            if raycast(self.rects["top"].center,colliders,(0,1),self.velocity[1]) != -1:
                 self.velocity[1] = 0
-                print("top")
+                self.velocity[0] /= 1.2
         else :
-            if raycast(self.rects["bottom"].center,self.tilemap.get_colliders(),(0,-1),abs(self.velocity[1])):
+            if raycast(self.rects["bottom"].center,colliders,(0,-1),abs(self.velocity[1])) != -1:
                 self.velocity[1] = 0
+                self.velocity[0] *= 0.7
+                if self.velocity[0] < 0.1:
+                    self.bullet_count = self.max_bullets
+            else:
+                self.velocity[0] *= 0.9
         
+        self.velocity[0] = round(self.velocity[0],2)
+        
+        if self.velocity[0] < 0:
+            side_collisions = self.rects["left"].collidelist(colliders) != -1 
+        else:
+            side_collisions = self.rects["right"].collidelist(colliders) != -1
+            
         self.tilemap.offset = (self.tilemap.offset[0], self.tilemap.offset[1] + self.velocity[1])
-        self.x += self.velocity[0]
+        if not side_collisions:
+            self.x += self.velocity[0]
+        else:
+            self.velocity[0] = 0
+            
+            
         for bullet in self.bullets:
             bullet.update()
 
@@ -98,10 +108,10 @@ class Player(pygame.sprite.Sprite):# Load and scale the player image
         if self.bullet_count > 0:
             self.sounds["gunshot"].play()
             self.bullet_count -= 1
-            angle = math.atan2(mouse_pos[1]-self.rect.centery,mouse_pos[0]-self.rect.centerx)
+            angle = math.pi-math.atan2(mouse_pos[1]-self.rect.centery,mouse_pos[0]-self.rect.centerx)
             self.velocity[0] = math.cos(angle)*power
             self.velocity[1] = math.sin(angle)*power
-            self.bullets.add(Bullet(self.tilemap,self,Vector2(math.cos(angle)*power,-math.sin(angle)*power),power))
+            self.bullets.add(Bullet(self.tilemap,self,Vector2(-math.cos(angle)*power,math.sin(angle)*power),power))
 
 
 
@@ -140,8 +150,8 @@ def raycast(origin,colliders,direction,length):
     for i in range(0,round(length+0.5),1):
         for collider in colliders:
             if collider.collidepoint(origin[0]+direction[0]*i,origin[1]+direction[1]*i):
-                return collider
-    return None
+                return i
+    return -1
 
 if __name__ == "__main__":
     import pygame
