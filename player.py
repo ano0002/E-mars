@@ -158,8 +158,11 @@ class Player():
         angle = 360-math.atan2(pos[1]-self.rect.centery,pos[0]-self.rect.centerx)*180/math.pi
 
         # Update the player's image for animated sprites
+        trans = 0.03   # Transition speed
         if self.image_index >= len(self.list_images)-1: self.image_index = 0
-        else: self.image_index = (self.image_index + 0.05)
+        else:
+            if round(self.image_index) in (1,3): self.image_index += trans   # speed up ugly frames
+            self.image_index += trans
         if self.facing_right: self.image = self.list_images[round(self.image_index)]
         else: self.image = pygame.transform.flip(self.list_images[round(self.image_index)], True, False)
 
