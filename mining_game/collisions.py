@@ -63,7 +63,35 @@ def display_ore(name, blocks_left, index, screen, screen_size):
     screen.blit(text, text_rect)
 
 
-def detect_blocks_left(level, screen, screen_size, particle_engine):
+def animation(name, screen, screen_size, i):
+    x, y = (screen_size[0] // 2, screen_size[1] // 2)
+    if   name == "gold":             y -= i
+    elif name == "redstone": x -= i; y -= i
+    elif name == "coal":     x -= i; y += i
+    elif name == "iron":     x += i; y -= i
+    elif name == "copper":   x += i; y += i
+    image = pygame.image.load(f"./mining_game/bloc_pics/{name}.png")
+    factor = 3
+    old_width, old_height = image.get_size()
+    new_width = int(old_width * factor)
+    new_height = int(old_height * factor)
+    image = pygame.transform.scale(image, (new_width, new_height))
+    image_rect = image.get_rect()
+    image_rect.center = (x,y)
+    screen.blit(image, image_rect)
+    """
+    i = 150
+    while i != 0:
+        animation("gold",    screen, screen_size, round(i))
+        animation("redstone",screen, screen_size, round(i))
+        animation("coal",    screen, screen_size, round(i))
+        animation("iron",    screen, screen_size, round(i))
+        animation("copper",  screen, screen_size, round(i))
+        i -= 0.5
+    """
+
+
+def detect_blocks_left(level, screen, screen_size, particle_engine, anim):
     blocks_left = [2, 3, 2, 6, 2]      # (5, 6, 8, (7, 12), 14) indexes of rare blocks
     for sprite in level.terrain_sprites:
         if sprite.index == 5:          # gold
@@ -77,33 +105,34 @@ def detect_blocks_left(level, screen, screen_size, particle_engine):
         elif sprite.index == 14:       # copper
             blocks_left[4] -= 1
 
-    if blocks_left == [2, 3, 2, 6, 2]:                                # If no blocks are left
+    if blocks_left == [2, 3, 2, 6, 2]:   # If no blocks are left
+        if anim == False:
+            image = pygame.image.load('./mining_game/bloc_pics/gun.png')              # Image of new gun
+            factor = 4.5
+            old_width, old_height = image.get_size()
+            new_width = int(old_width * factor)
+            new_height = int(old_height * factor)
+            image = pygame.transform.scale(image, (new_width, new_height))
+            image_rect = image.get_rect()
+            image_rect.center = (screen_size[0] // 2, screen_size[1] // 2)
+            screen.blit(image, image_rect)
+            color = (randint(0, 255), randint(0, 255), randint(0, 255))   # Particles
+            particle_engine.create_particles(image_rect.center[0], image_rect.center[1], 1, color, 2)
+            font = pygame.font.Font(None, 36)                             # Text "Press space to continue"
+            text = font.render("Press space to continue", True, (0, 0, 0))
+            text_rect = text.get_rect()
+            text_rect.center = (screen_size[0] // 2, screen_size[1] - screen_size[1] // 20)
+            screen.blit(text, text_rect)
         font = pygame.font.Font(None, 36)                             # Text "New gun Crafted!"
         text = font.render("New gun Crafted!", True, (0, 0, 0))
         text_rect = text.get_rect()
-        text_rect.center = (screen_size[0] // 2, screen_size[1] // 2)
+        text_rect.center = (screen_size[0] // 2, screen_size[1] // 2 - 50)
         screen.blit(text, text_rect)
-        image = pygame.image.load('./mining_game/bloc_pics/gun.png')              # Image of new gun
-        factor = 4.5
-        old_width, old_height = image.get_size()
-        new_width = int(old_width * factor)
-        new_height = int(old_height * factor)
-        image = pygame.transform.scale(image, (new_width, new_height))
-        image_rect = image.get_rect()
-        image_rect.center = (screen_size[0] // 2, screen_size[1] // 2 + 50)
-        screen.blit(image, image_rect)
-        color = (randint(0, 255), randint(0, 255), randint(0, 255))   # Particles
-        particle_engine.create_particles(image_rect.center[0], image_rect.center[1], 1, color, 2)
-        font = pygame.font.Font(None, 36)                             # Text "Press space to continue"
-        text = font.render("Press space to continue", True, (0, 0, 0))
-        text_rect = text.get_rect()
-        text_rect.center = (screen_size[0] // 2, screen_size[1] - screen_size[1] // 20)
-        screen.blit(text, text_rect)
-        return False
-    else :                                                            # If blocks are left diplay their amount
-        display_ore("gold", blocks_left, 0, screen, screen_size)
-        display_ore("redstone", blocks_left, 1, screen, screen_size)
-        display_ore("coal", blocks_left, 2, screen, screen_size)
-        display_ore("iron", blocks_left, 3, screen, screen_size)
-        display_ore("copper", blocks_left, 4, screen, screen_size)
         return True
+    else :                                                            # If blocks are left diplay their amount
+        display_ore("gold",    blocks_left, 0, screen, screen_size)
+        display_ore("redstone",blocks_left, 1, screen, screen_size)
+        display_ore("coal",    blocks_left, 2, screen, screen_size)
+        display_ore("iron",    blocks_left, 3, screen, screen_size)
+        display_ore("copper",  blocks_left, 4, screen, screen_size)
+        return False

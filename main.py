@@ -18,8 +18,7 @@ player = Player(playing_area)
 #display_width, display_height = (pygame.display.Info().current_w, pygame.display.Info().current_h)
 #c moins beugé avec ça mais ça fait des bandes noires a cause de la taille des tiles
 #je sais pas faire mais si y a moyen de changer la taille des tiles en fonction de la taille de l'écran plutot ce serait moins beugé
-display_width = playing_area.width*16
-display_height = playing_area.height*16
+display_width, display_height = playing_area.width*16, playing_area.height*16
 display = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
 
 # load the icon image

@@ -3,7 +3,7 @@ from typing import List, Tuple
 import pygame
 from .level import Level
 from .pickaxe import Pickaxe
-from .collisions import detect_collision, detect_blocks_left
+from .collisions import detect_collision, detect_blocks_left, animation
 from .particles import ParticleEngine
 
 
@@ -28,17 +28,12 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int]) -> tuple:
     particle_engine = ParticleEngine(50)   # maximum of 50 particles on screen at once
 
     done = False
+    anim = None
+    i_anim, i_anim2 = 200, 1
     while True:
         screen.fill(screen_color)
         if done:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = pygame.mouse.get_pos()
-                    detect_collision(mouse_pos, level, particle_engine)
-        else:
+            if anim is None: anim = True
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -49,12 +44,30 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int]) -> tuple:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         return
+        else:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    detect_collision(mouse_pos, level, particle_engine)
 
         level.run()   # Blocks
 
         particle_engine.update()
         particle_engine.draw(screen)   # Particles
-        done = detect_blocks_left(level, screen, screen_size, particle_engine)   # if there are no blocks left
+        done = detect_blocks_left(level, screen, screen_size, particle_engine, anim)   # if there are no blocks left
+
+        if anim:
+            animation("gold",    screen, screen_size, round(i_anim))
+            animation("redstone",screen, screen_size, round(i_anim))
+            animation("coal",    screen, screen_size, round(i_anim))
+            animation("iron",    screen, screen_size, round(i_anim))
+            animation("copper",  screen, screen_size, round(i_anim))
+            if i_anim2 > 2: i_anim -= 0.05 + i_anim2
+            i_anim2 += 0.05
+            if i_anim <= 0: anim = False
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
         pickaxe.update(mouse_x, mouse_y)
