@@ -156,14 +156,24 @@ class Player():
         screen.blit(self.image, self.rect)
         pos = pygame.mouse.get_pos()
         angle = 360-math.atan2(pos[1]-self.rect.centery,pos[0]-self.rect.centerx)*180/math.pi
+
+        # Update the player's image for animated sprites
+        if self.image_index >= len(self.list_images)-1: self.image_index = 0
+        else: self.image_index = (self.image_index + 0.05)
+        if self.facing_right: self.image = self.list_images[round(self.image_index)]
+        else: self.image = pygame.transform.flip(self.list_images[round(self.image_index)], True, False)
+
+        # Flip the player's image if necessary
         if self.facing_left and 270 < angle and angle < 450 :
             self.facing_right, self.facing_left = True, False
             self.image = pygame.transform.flip(self.image, True, False)
         elif self.facing_right and not (270 < angle and angle < 450):
             self.facing_right, self.facing_left = False, True
             self.image = pygame.transform.flip(self.image, True, False)
-        """
-        if not (270 < angle and angle < 450):   # attempt to flip gun
+        
+        # Draw the player's gun
+        """ attempt to flip gun
+        if not (270 < angle and angle < 450):
             angle = -angle
             rotimage = pygame.transform.flip(rotimage, False, True)
         """
