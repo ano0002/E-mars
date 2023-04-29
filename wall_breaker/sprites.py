@@ -5,9 +5,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Tuple
 import pygame
-from collision_handler import Collisionhandler
-from static_sprite.py import StaticSprite
-
+from collision_handler import CollisionHandler
+from static_sprites import StaticSprite
 class GameMovingSprite(StaticSprite, ABC):
     """
     Moving sprites should inherit me and provide their own functionality

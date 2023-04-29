@@ -4,18 +4,18 @@ Main Module
 from socket import fromfd
 import pygame
 # from pprint import pprint
-from sprites.py import GameMovingSprite
-from sprites.py import UserControlledGameMovingSprite
-from sprites.py import Ball
-from sprites.py import Player
-from sprites.py import BreakableBrick
-from sprites.py import PoisonedBrick
-from sprites.py import UnbreakableBrick
-from collision_handler_sprites.py import CollisionHandlerSprites
-from collision_handler.py import CollisionHandler
-from event_dispatcher.py import EventDispatcher
-from common.py import Common
-from score.py import Score
+from sprites import GameMovingSprite
+from sprites import UserControlledGameMovingSprite
+from sprites import Ball
+from sprites import Player
+from sprites import BreakableBrick
+from sprites import PoisonedBrick
+from sprites import UnbreakableBrick
+from collision_handler_sprites import CollisionHandlerSprites
+from collision_handler import CollisionHandler
+from event_dispatcher import EventDispatcher
+from common import Common
+from score import Score
 
 def create_bricks(from_height: int, brick_map: list, screen: pygame.Surface,
                   screen_width: int, screen_height: int,
@@ -93,7 +93,7 @@ def start():
     pygame.display.set_caption('Wall breaker')
     score_height = 80
     t0= pygame.time.get_ticks
-    #score: Score = Score(screen, score_height)
+    #ici je dois faire un truc pour le score
     collision_handler: CollisionHandler = CollisionHandlerSprites(score)
     player: UserControlledGameMovingSprite = Player(screen)\
         .set_image(150, 50, Common.PING_IMAGE_NAME)\

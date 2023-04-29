@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from typing import Tuple
 from dataclasses import dataclass
 import pygame
-from collision_handler.py import CollisionHandler
+from collision_handler import CollisionHandler
 
 @dataclass
 class Display:

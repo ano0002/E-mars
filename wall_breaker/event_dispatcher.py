@@ -2,7 +2,7 @@
 Event dispatcher
 """
 import pygame
-from sprites.py import GameMovingSprite
+from sprites import GameMovingSprite
 
 class EventDispatcher():
     """
