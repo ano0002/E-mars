@@ -21,6 +21,7 @@ class CollisionHandlerSprites(CollisionHandler):
     score = None
 
     def __init__(self):
+        self.score = score
 
     def subscribe_static(self, sprite: StaticSprite):
         """

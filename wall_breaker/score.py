@@ -33,14 +33,14 @@ class Score(pygame.sprite.Sprite):
         self.display.screen.blit(text_surface, (left_pos_text, top_pos))
         self.display.screen.blit(score_surface, (left_pos_score, top_pos))
     """
-    def __init__(self, x, y, text="", text_color=(0, 0, 0), font_size=30):
+    def __init__(self):
         super().__init__()
-        self.font = pygame.font.SysFont("Arial", font_size)
-        self.text = text
-        self.text_color = text_color
+        self.font = pygame.font.SysFont("Arial", 30)
+        self.text = "Score : "
+        self.text_color = blue
         self.text_image = self.font.render(text, True, text_color)
         self.text_rect = self.text_image.get_rect()
-        self.text_rect.x = x
-        self.text_rect.y = y
+        self.text_rect.x = (self.display.screen_width - whole_width) // 2 + text_surface.get_width()
+        self.text_rect.y = (self.height // 2 - max(text_surface.get_height(), score_surface.get_height()))
         self.image = self.text_image
         self.rect = self.text_rect
