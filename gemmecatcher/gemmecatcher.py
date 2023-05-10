@@ -5,7 +5,7 @@ import random
 pygame.init()
 
 # Set the width and height of the screen (width, height).
-screen_size = (700, 500)
+screen_size = (1920, 1080)
 screen = pygame.display.set_mode(screen_size)
 
 # Set the title of the game window
@@ -14,20 +14,23 @@ pygame.display.set_caption("Bubble Shooter")
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
-# Set the screen background color
-background_color = (255, 255, 255)
+# Load the background image
+background_image = pygame.transform.scale(pygame.image.load(".\map_cave.jpg"),(screen_size))
+
+
+# Load the bubble image
+bubble_image = pygame.transform.scale(pygame.image.load('.\gemme_python.png'),(32, 64))
 
 # Define the bubble class
 class Bubble:
-    def __init__(self, x, y, color, size):
+    def __init__(self, x, y, size):
         self.x = x
         self.y = y
-        self.color = color
         self.size = size
 
     def update(self):
         # Move the bubble down
-        self.y += 10 - len(bubble_list)/10
+        self.y += 25 - len(bubble_list)/5
 
         # If the bubble goes off the bottom of the screen, reset it to the top
         if self.y > screen_size[1]:
@@ -35,39 +38,44 @@ class Bubble:
             self.x = random.randint(0, screen_size[0])
 
     def draw(self, screen):
-        pygame.draw.circle(screen, self.color, (self.x, self.y), self.size)
+        # Draw the bubble image
+        screen.blit(bubble_image, (self.x, self.y))
+
+
+# Load the cannon image
+cannon_image = pygame.transform.scale(pygame.image.load(".\player_tube.png").convert_alpha(),(70,2160))
+cannon_width = cannon_image.get_width()
+cannon_height = cannon_image.get_height()
+
 
 # Define the cannon class
 class Cannon:
-    def __init__(self, x, y, width, height):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+    def __init__(self, x, y, image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def update(self, mouse_x, mouse_y):
         # Set the cannon position to the mouse position
-        self.x = mouse_x
-        self.y = mouse_y
+        self.rect.topright = (mouse_x, mouse_y)
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (0, 0, 0), (self.x - self.width / 2, self.y - self.height / 2, self.width, self.height))
+        screen.blit(self.image, self.rect)
+
 
 # Create a list of bubbles
 bubble_list = []
-for i in range(50):
+for i in range(100):
     x = random.randint(0, screen_size[0])
     y = random.randint(0, screen_size[1])
-    color = (255, 0, 0)
-    size = 5
-    bubble = Bubble(x, y, color, size)
+    size = 50
+    bubble = Bubble(x, y, size)
     bubble_list.append(bubble)
 
 # Create a cannon
-cannon = Cannon(0, 0, 20, 20)
-
-
-
+#cannon = Cannon(0, 0, 50, 50)
+cannon = Cannon(0, 0, cannon_image)
 
 # Game loop
 running = True
@@ -80,23 +88,27 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # Clear the screen
-    screen.fill(background_color)
+    # Draw the background image
+    screen.blit(background_image, (0, 0))
 
     # Get the mouse position
     mouse_x, mouse_y = pygame.mouse.get_pos()
-
 
     # Update and draw the bubbles
     for bubble in bubble_list:
         bubble.update()
         bubble.draw(screen)
+        offset=10
 
-        # Check if the cannon collides with the bubble
-        if cannon.x - cannon.width / 2 < bubble.x < cannon.x + cannon.width / 2 and cannon.y - cannon.height / 2 < bubble.y < cannon.y + cannon.height / 2:
+        if cannon.rect.x + offset - cannon_width < bubble.x < cannon.rect.x + offset and cannon.rect.y < bubble.y < cannon.rect.y + 20:
             bubble_list.remove(bubble)
-            cannon.color = (255, 255, 255)
+            cannon_color = (255, 255, 255)
             cannon_color_change_time = pygame.time.get_ticks()
+
+
+
+
+
 
     # Check if it's time to change the cannon back to its original color
     if cannon_color != (0, 0, 0) and pygame.time.get_ticks() - cannon_color_change_time >= 3000:
@@ -125,5 +137,6 @@ while running:
 
 # Quit the game
 pygame.quit()
+
 
 
