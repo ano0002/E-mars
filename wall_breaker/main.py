@@ -1,4 +1,4 @@
-from run.py import start
+from run import start
 
 if __name__ == "__main__":
     start()

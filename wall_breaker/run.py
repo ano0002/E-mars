@@ -3,19 +3,20 @@ Main Module
 """
 from socket import fromfd
 import pygame
+import math
 # from pprint import pprint
-from sprites.py import GameMovingSprite
-from sprites.py import UserControlledGameMovingSprite
-from sprites.py import Ball
-from sprites.py import Player
-from sprites.py import BreakableBrick
-from sprites.py import PoisonedBrick
-from sprites.py import UnbreakableBrick
-from collision_handler_sprites.py import CollisionHandlerSprites
-from collision_handler.py import CollisionHandler
-from event_dispatcher.py import EventDispatcher
-from common.py import Common
-from score.py import Score
+from sprites import GameMovingSprite
+from sprites import UserControlledGameMovingSprite
+from sprites import Ball
+from sprites import Player
+from sprites import BreakableBrick
+from sprites import PoisonedBrick
+from sprites import UnbreakableBrick
+from collision_handler_sprites import CollisionHandlerSprites
+from collision_handler import CollisionHandler
+from event_dispatcher import EventDispatcher
+from common import Common
+from score import Score
 
 def create_bricks(from_height: int, brick_map: list, screen: pygame.Surface,
                   screen_width: int, screen_height: int,
@@ -92,36 +93,34 @@ def start():
 
     pygame.display.set_caption('Wall breaker')
     score_height = 80
-    t0= pygame.time.get_ticks
-    #score: Score = Score(screen, score_height)
-    collision_handler: CollisionHandler = CollisionHandlerSprites(score)
+    t0= pygame.time.get_ticks()
+    score=round((pygame.time.get_ticks()-t0)/1000)
+
     player: UserControlledGameMovingSprite = Player(screen)\
         .set_image(150, 50, Common.PING_IMAGE_NAME)\
             .set_position(screen_width // 2, screen_height - score_height)\
-                .set_collision_handler(collision_handler)
+                .set_collision_handler(CollisionHandler)
 
     ball: GameMovingSprite = Ball(screen)\
         .set_image(10, 10, Common.BALL_IMAGE_NAME)\
             .set_position(screen_width // 2, 4 * screen_height // 5)\
-                .set_collision_handler(collision_handler)
+                .set_collision_handler(CollisionHandler)
 
 
     event_dispatcher: EventDispatcher = EventDispatcher()
     event_dispatcher.subscribe(player)
-    collision_handler.subscribe_moving(player)
-    collision_handler.subscribe_moving(ball)
+    CollisionHandlerSprites.subscribe_moving(player, Player)
+    CollisionHandlerSprites.subscribe_moving(ball, Ball)
 
     bricks = create_bricks(from_height, brick_map, screen, screen_width, screen_height, collision_handler)
     for brick in bricks:
         collision_handler.subscribe_static(brick)
-
     clock: pygame.time.Clock = pygame.time.Clock()
 
     while not event_dispatcher.is_done():
         event_dispatcher.process_event()
         player.move()
         ball.move()
-
         screen.fill(Common.BLACK)
         player.display_on_screen()
         ball.display_on_screen()
@@ -129,9 +128,6 @@ def start():
         score.display_on_screen()
         for brick in bricks:
             brick.display_on_screen()
-
         pygame.display.flip()
-
         clock.tick(80)
-
     pygame.quit()

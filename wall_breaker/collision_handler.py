@@ -43,13 +43,6 @@ class CollisionHandler(ABC):
         When a sprite is about to move he should inform
         the collision handler with this method
         """
-
-    @abstractmethod
-    def add_score(self, score_adde: int) -> None:
-        """
-        When a sprite is bumped, it can modify the score
-        """
-
     @abstractmethod
     def unsubscribe(self, sprite) -> None:
         """

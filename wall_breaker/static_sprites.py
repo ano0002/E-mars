@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from typing import Tuple
 from dataclasses import dataclass
 import pygame
-from collision_handler.py import CollisionHandler
+from collision_handler import CollisionHandler
 
 @dataclass
 class Display:
@@ -32,7 +32,6 @@ class Image:
 class StaticSprite(pygame.sprite.Sprite, ABC):
     """
     Static sprites cannot move, moving sprites are handled by another class
-    TODO: A build in the builder patter is needed
     """
     collision_handler: CollisionHandler = None
     display: Display = None

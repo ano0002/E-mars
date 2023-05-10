@@ -5,9 +5,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Tuple
 import pygame
-from collision_handler import Collisionhandler
-from static_sprite.py import StaticSprite
-
+from collision_handler import CollisionHandler
+from static_sprites import StaticSprite
 class GameMovingSprite(StaticSprite, ABC):
     """
     Moving sprites should inherit me and provide their own functionality
@@ -167,7 +166,7 @@ class Player(UserControlledGameMovingSprite):
     """
     next_position_x: int = 0
 
-    def set_position(self, pos_x: int, pos_y: int) -> StaticSprite:
+    def set_position(self, pos_x: int, pos_y: int) -> GameMovingSprite:
         """
         Set new position of user with coordinates
         """
@@ -213,15 +212,9 @@ class Player(UserControlledGameMovingSprite):
             if self.collision_handler is not None:
                 self.collision_handler.inform_sprite_about_to_move()
             self.image.rect.x = self.next_position_x
-        #if(mouse_position_y > self.height // 2 and
-        # mouse_position_y < self.screen_height - self.height // 2):
-        #    self.rect.y = mouse_position_y -  self.height // 2
-
     def bumped(self, from_side_bumped: dict) -> None:
         horizontal_collision, _ = \
             self.collision_handler.horizontal_collision_side_bumped(from_side_bumped)
-        if horizontal_collision:
-            self.collision_handler.add_score(1)
 
     def move(self) -> None:
         """
@@ -232,8 +225,5 @@ class Player(UserControlledGameMovingSprite):
            self.image.rect.x + self.image.width + self.change_x > \
            self.display.screen_width):
             self.change_x = 0
-        #if(self.rect.y + self.change_y < 1 or
-        # self.rect.y + self.height + self.change_y > self.screen_height):
-        #    self.change_y = 0
 
         super().move()
