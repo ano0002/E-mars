@@ -1,7 +1,7 @@
 import pygame
 from player import Player
 from tilemap import Map,Tileset
-from bubbleshooter.bubbleshoot import bubble_shooter
+from gemmecatcher.gemmecatcher import gemmecatcher
 from mining_game.main import mining_game
 #from tower_defense.main import Game as TowerDefense
 pygame.init()
@@ -44,7 +44,7 @@ while True:
             if event.key == pygame.K_SPACE:
                 player.velocity[1] = -10
             if event.key == pygame.K_1:
-                validated,score_bubble = bubble_shooter(screen_size=(display_width,display_height),screen=display)
+                validated,score_bubble = gemmecatcher(screen_size=(display_width,display_height),screen=display)
             if event.key == pygame.K_2:
                 mining_game(screen=display,screen_size=(display_width,display_height))
                 #show back the default cursor
