@@ -98,9 +98,9 @@ while running:
     for bubble in bubble_list:
         bubble.update()
         bubble.draw(screen)
-        offset=10
+        offset=40
 
-        if cannon.rect.x + offset - cannon_width < bubble.x < cannon.rect.x + offset and cannon.rect.y < bubble.y < cannon.rect.y + 20:
+        if cannon.rect.x + offset - cannon_width < bubble.x < cannon.rect.x + offset and cannon.rect.y < bubble.y < cannon.rect.y + offset:
             bubble_list.remove(bubble)
             cannon_color = (255, 255, 255)
             cannon_color_change_time = pygame.time.get_ticks()
