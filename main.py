@@ -1,7 +1,7 @@
 import pygame
 from player import Player
 from tilemap import Map,Tileset
-from gemmecatcher.gemmecatcher import gemmecatcher
+#from gemmecatcher.gemmecatcher import gemmecatcher
 from mining_game.main import mining_game
 #from tower_defense.main import Game as TowerDefense
 pygame.init()

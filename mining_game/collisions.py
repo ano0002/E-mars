@@ -4,6 +4,9 @@ from random import random, randint
 
 bt = 20         # size between two tiles up and down
 part_num = 15   # number of particles created when a block is broken
+dirt_sound = 5
+stone_sound = 5
+explosion_sound = 0.3
 
 def detect_collision(mousepos, level, particle_engine):
     for i, sprite in enumerate(level.terrain_sprites):
@@ -19,7 +22,9 @@ def detect_collision(mousepos, level, particle_engine):
                 break   # if tile is bedrock
 
             elif sprite.index == 28:
-                pygame.mixer.Sound("./mining_game/sounds/dirt.mp3").play()
+                dirt = pygame.mixer.Sound("./mining_game/sounds/dirt.mp3")
+                dirt.set_volume(dirt_sound)
+                dirt.play()
                 sprite.index = -1
                 sprite.image = pygame.Surface((0, 0))
                 particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (143,92,51)) 
@@ -27,15 +32,35 @@ def detect_collision(mousepos, level, particle_engine):
                 break   # if tile is  dirt (only on the right edge)
 
             elif (level.terrain_sprites.sprites()[i+1].index == -1 or level.terrain_sprites.sprites()[i-1].index == -1 or level.terrain_sprites.sprites()[i+bt].index == -1  or level.terrain_sprites.sprites()[i-bt].index == -1):
-                if sprite.index in (25, 26, 27):
-                    pygame.mixer.Sound("./mining_game/sounds/dirt.mp3").play()
+                if sprite.index in (25, 26, 27, 29):
+                    dirt = pygame.mixer.Sound("./mining_game/sounds/dirt.mp3")
+                    dirt.set_volume(dirt_sound)
+                    dirt.play()
                     particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (143,92,51))
                     if sprite.index in (25, 26): particle_engine.create_particles(mousepos[0], mousepos[1], 5, (126,119,128))
+                    elif sprite.index == 29: 
+                        exp = pygame.mixer.Sound("./mining_game/sounds/explosion.wav")
+                        exp.set_volume(explosion_sound)
+                        exp.play()
+                        particle_engine.create_particles(mousepos[0], mousepos[1], 5, (236, 28, 36), 1)
+                        particle_engine.create_particles(mousepos[0], mousepos[1], 5, (255, 136, 24), 1)
+                        particle_engine.create_particles(mousepos[0], mousepos[1], 5, (255, 229, 32), 1)
+                        particle_engine.create_particles(mousepos[0], mousepos[1], 5, (0, 0, 0), 1)
                 else:
-                    pygame.mixer.Sound("./mining_game/sounds/stone.mp3").play()
-                    if sprite.index in (12, 14, 20, 21, 22, 23, 24): particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (135,133,145))
-                    elif sprite.index in (1, 2, 3, 4, 5, 6, 7, 8): particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (61,64,78))
-                    if sprite.index in (7, 12, 14): particle_engine.create_particles(mousepos[0], mousepos[1], 5, (221,164,126))
+                    ston = pygame.mixer.Sound("./mining_game/sounds/stone.mp3")
+                    ston.set_volume(stone_sound)
+                    ston.play()
+                    if sprite.index in (12, 14, 20, 21, 22, 23, 24, 10): particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (135,133,145))
+                    elif sprite.index in (1, 2, 3, 4, 5, 6, 7, 8, 9): particle_engine.create_particles(mousepos[0], mousepos[1], part_num, (61,64,78))
+                    if sprite.index in (10, 9): 
+                        exp = pygame.mixer.Sound("./mining_game/sounds/explosion.wav")
+                        exp.set_volume(explosion_sound)
+                        exp.play()
+                        particle_engine.create_particles(mousepos[0], mousepos[1], 5, (236, 28, 36), 1)
+                        particle_engine.create_particles(mousepos[0], mousepos[1], 5, (255, 136, 24), 1)
+                        particle_engine.create_particles(mousepos[0], mousepos[1], 5, (255, 229, 32), 1)
+                        particle_engine.create_particles(mousepos[0], mousepos[1], 5, (0, 0, 0), 1)
+                    elif sprite.index in (7, 12, 14): particle_engine.create_particles(mousepos[0], mousepos[1], 5, (221,164,126))
                     elif sprite.index == 8: particle_engine.create_particles(mousepos[0], mousepos[1], 5, (17,12,20))
                     elif sprite.index == 6: particle_engine.create_particles(mousepos[0], mousepos[1], 5, (227,85,60))
                     elif sprite.index == 5: particle_engine.create_particles(mousepos[0], mousepos[1], 5, (212,151,30))
@@ -117,7 +142,8 @@ def detect_blocks_left(level, screen, screen_size, particle_engine, anim):
             image_rect.center = (screen_size[0] // 2, screen_size[1] // 2)
             screen.blit(image, image_rect)
             color = (randint(0, 255), randint(0, 255), randint(0, 255))   # Particles
-            particle_engine.create_particles(image_rect.center[0], image_rect.center[1], 1, color, 2)
+            particle_engine.create_particles(image_rect.center[0], image_rect.center[1], 1, color, 1)
+            particle_engine.create_particles(image_rect.center[0], image_rect.center[1], 1, color, 1)
             font = pygame.font.Font(None, 36)                             # Text "Press space to continue"
             text = font.render("Press space to continue", True, (0, 0, 0))
             text_rect = text.get_rect()

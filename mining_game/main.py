@@ -16,14 +16,14 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int]) -> tuple:
     clock = pygame.time.Clock()
 
     music = pygame.mixer.music.load('./mining_game/sounds/BGM.mp3')
-    pygame.mixer.music.set_volume(0.4)   # set the volume to 40% otherwise we can't hear the sound effects
+    pygame.mixer.music.set_volume(0.6)   # set the volume to 40% otherwise we can't hear the sound effects
     music = pygame.mixer.music.play(-1)
 
     level = Level("./mining_game/bloc_pics/map.csv",screen)
 
     pygame.mouse.set_cursor((8, 8), (0, 0), (0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0))   # hide the mouse cursor
-    pickaxe = Pickaxe(100, 100, 64, 64)
-    pickaxe.scale(2.0)   # make the pickaxe twice as big
+    pickaxe = Pickaxe(100, 100, 64, 64)   # 100 is the x and y position of the pickaxe, 64 is the width and height of the pickaxe
+    pickaxe.scale(1.4)   # make the pickaxe twice as big
 
     particle_engine = ParticleEngine(50)   # maximum of 50 particles on screen at once
 

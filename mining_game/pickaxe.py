@@ -14,8 +14,7 @@ class Pickaxe:
         self.y = mouse_y
 
     def draw(self, screen):
-        offset = 4
-        screen.blit(self.image, (self.x - self.width / offset, self.y - self.height / offset))
+        screen.blit(self.image, (self.x - self.width / 10, self.y - self.height / 2.5))
 
     def scale(self, factor):
         old_width, old_height = self.image.get_size()
