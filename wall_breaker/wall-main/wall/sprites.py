@@ -1,12 +1,10 @@
-"""
-Handle all sprites
-"""
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Tuple
 import pygame
-from collision_handler import CollisionHandler
-from static_sprites import StaticSprite
+from wall.collision_handler import CollisionHandler
+from wall.static_sprite import StaticSprite
+
 class GameMovingSprite(StaticSprite, ABC):
     """
     Moving sprites should inherit me and provide their own functionality
@@ -35,17 +33,10 @@ class GameMovingSprite(StaticSprite, ABC):
         self.change_y = vertical_speed
 
     def get_position_for_collision_analysis(self) -> Tuple[int, int]:
-        """
-        Analyze collision taking into account next position
-        """
         return (self.image.rect.x + self.change_x,
                 self.image.rect.y + self.change_y)
 
     def change_speed_factor(self, factor_x: int, factor_y: int) -> None:
-        """
-        Speed factor should not be greater than half of the size of the sprite
-        otherwise movement will not be fluid anymore
-        """
         if abs(self.change_x) < self.image.width / 2:
             self.change_x *= factor_x
         if abs(self.change_y) < self.image.height / 2:
@@ -61,10 +52,6 @@ class GameMovingSprite(StaticSprite, ABC):
 
 
 class UserControlledGameMovingSprite(GameMovingSprite, ABC):
-    """
-    This is purely user controlled class
-    """
-
     @abstractmethod
     def start_direction(self, direction: int) -> None:
         """
@@ -85,9 +72,6 @@ class UserControlledGameMovingSprite(GameMovingSprite, ABC):
 
 
 class Ball(GameMovingSprite):
-    """
-    This is the sprite representing the ball bumping
-    """
     horizontal: int = CollisionHandler.HORIZONTAL
     vertical: int = CollisionHandler.VERTICAL
     left: int = CollisionHandler.LEFT
@@ -126,7 +110,7 @@ class Ball(GameMovingSprite):
             self.image.rect.y + self.image.height > self.display.screen_height):
             self.change_y = -self.change_y
             if self.image.rect.y + self.image.height > self.display.screen_height:
-                self.collision_handler.add_score(-500)
+                self.collision_handler.add_score(+10)
 
         self.horizontal_collision = False
         self.vertical_collision = False
@@ -139,54 +123,38 @@ class BreakableBrick(StaticSprite):
 
     def bumped(self, from_side_bumped: dict) -> None:
         if self.number_remaining_bumps > 0:
-            self.collision_handler.add_score(5)
             self.number_remaining_bumps -= 1
         elif self.collision_handler == 0:
-            self.collision_handler.add_score(100)
+            self.collision_handler.add_bricks(1)
 
     def display_on_screen(self) -> None:
         if self.number_remaining_bumps == 0:
             self.collision_handler.unsubscribe(self)
             self.number_remaining_bumps -= 1
+
         if self.number_remaining_bumps > 0:
             super().display_on_screen()
 
-class UnbreakableBrick(StaticSprite):
-    def bumped(self, from_side_bumped: dict) -> None:
-        pass
-
-class PoisonedBrick(StaticSprite):
-    def bumped(self, from_side_bumped: dict) -> None:
-        self.collision_handler.add_score(-10)
-
+class Bricks(pygame.sprite.Sprite):
+    breaked: int=0
+    def add_bricks(self, score_add) -> None:
+        self.breaked += score_add
 
 class Player(UserControlledGameMovingSprite):
-    """
-    This is the concrete user player class
-    """
     next_position_x: int = 0
 
-    def set_position(self, pos_x: int, pos_y: int) -> GameMovingSprite:
-        """
-        Set new position of user with coordinates
-        """
-        super().set_position(pos_x, self.display.screen_height - self.image.height)
+    def set_position(self, pos_x: int, pos_y: int) -> StaticSprite:
+        super().set_position(pos_x, pos_y)
         self.next_position_x = pos_x
         return self
 
     def start_direction(self, direction: int) -> None:
-        """
-        This starts movement with the keyboard
-        """
         if direction == pygame.K_LEFT:
-            self.change_speed(-5, 0)
+            self.change_speed(-3, 0)
         if direction == pygame.K_RIGHT:
-            self.change_speed(5, 0)
+            self.change_speed(3, 0)
 
     def stop_direction(self, direction) -> None:
-        """
-        This stops movement with the keyboard
-        """
         if direction in (pygame.K_LEFT, pygame.K_RIGHT):
             self.set_change_speed_x(0)
         if direction in (pygame.K_UP, pygame.K_DOWN):
@@ -195,14 +163,10 @@ class Player(UserControlledGameMovingSprite):
     def get_position_for_collision_analysis(self) -> Tuple[int, int]:
         """
         Position when colliding takes into account movement and direction
-        This needs to be extended in other classes if required
         """
         return (self.next_position_x, self.image.rect.y)
 
     def mouse_position_move(self, mouse_position) -> None:
-        """
-        This moves with the mouse
-        """
         self.change_x = 0
         self.change_y = 0
         mouse_position_x, _ = mouse_position
@@ -212,14 +176,12 @@ class Player(UserControlledGameMovingSprite):
             if self.collision_handler is not None:
                 self.collision_handler.inform_sprite_about_to_move()
             self.image.rect.x = self.next_position_x
+
     def bumped(self, from_side_bumped: dict) -> None:
         horizontal_collision, _ = \
             self.collision_handler.horizontal_collision_side_bumped(from_side_bumped)
 
     def move(self) -> None:
-        """
-        Apply the movement to the player
-        """
         super().change_speed_factor(1.10, 1.10)
         if(self.image.rect.x + self.change_x < 1 or \
            self.image.rect.x + self.image.width + self.change_x > \

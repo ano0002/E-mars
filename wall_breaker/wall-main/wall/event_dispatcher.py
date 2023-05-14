@@ -2,38 +2,22 @@
 Event dispatcher
 """
 import pygame
-from sprites import GameMovingSprite
+from wall.sprites import GameMovingSprite
 
 class EventDispatcher():
-    """
-    Event dispatcher informs registered sprites when specific events occur like
-    mouse move or key pressed
-    """
     is_done_status: bool = False
     controlled_moving_sprites: list = []
 
     def subscribe(self, controlled_moving_sprite: GameMovingSprite) -> None:
-        """
-        Attach a new sprite
-        """
         self.controlled_moving_sprites.append(controlled_moving_sprite)
 
     def unsubscribe(self, controlled_moving_sprite: GameMovingSprite) -> None:
-        """
-        Detach a sprite
-        """
         self.controlled_moving_sprites.remove(controlled_moving_sprite)
 
     def is_done(self) -> bool:
-        """
-        Inform if is done is required
-        """
         return self.is_done_status
 
     def process_event(self) -> None:
-        """
-        Handle the events
-        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.is_done_status = True

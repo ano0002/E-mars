@@ -3,9 +3,10 @@ Handle collisions
 """
 from typing import Tuple
 #from pprint import pprint
-from collision_handler import CollisionHandler
-from static_sprites import StaticSprite
-from sprites import GameMovingSprite
+from wall.collision_handler import CollisionHandler
+from wall.static_sprite import StaticSprite
+from wall.sprites import GameMovingSprite
+from wall.score import Score
 
 class CollisionHandlerSprites(CollisionHandler):
     """
@@ -20,7 +21,7 @@ class CollisionHandlerSprites(CollisionHandler):
     dynamic_sprites: set = set()
     score = None
 
-    def __init__(self):
+    def __init__(self, score: Score):
         self.score = score
 
     def subscribe_static(self, sprite: StaticSprite):
@@ -131,3 +132,6 @@ class CollisionHandlerSprites(CollisionHandler):
 
         for from_sprite, from_side_bumped in moving_sprites_collided.items():
             from_sprite.bumped(from_side_bumped)
+
+    def add_score(self, add_score: int) -> None:
+        self.score.add_score(add_score)

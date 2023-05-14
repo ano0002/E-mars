@@ -1,4 +1,4 @@
-from run import start
+from wall.run import start
 
 if __name__ == "__main__":
     start()
