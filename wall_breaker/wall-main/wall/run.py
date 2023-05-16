@@ -49,6 +49,8 @@ def start(screen):
     from_height: int = 50
     pygame.init()
 
+    background_image = pygame.transform.scale(pygame.image.load("map_cave.png"), (screen_width, screen_height))
+
     brick_map = ["XXXXXXXXXXXXX",
                  "XXXXXXXXXXXXX",
                  "XX         XX",
@@ -70,8 +72,6 @@ def start(screen):
             .set_position(screen_width // 2, screen_height - 36)\
                 .set_collision_handler(collision_handler)
 
-    brick: Bricks = Bricks(screen)\
-
     ball: GameMovingSprite = Ball(screen)\
         .set_image(10, 10, Common.BALL_IMAGE_NAME)\
             .set_position(screen_width // 2, 4 * screen_height // 5)\
@@ -88,12 +88,11 @@ def start(screen):
 
     clock: pygame.time.Clock = pygame.time.Clock()
 
-    while not event_dispatcher.is_done() and brick.breaked <2:
+    while not event_dispatcher.is_done():
         event_dispatcher.process_event()
         player.move()
         ball.move()
-
-        screen.fill(Common.BLACK)
+        screen.blit(background_image, (0, 0))
         player.display_on_screen()
         ball.display_on_screen()
         score.display_on_screen()

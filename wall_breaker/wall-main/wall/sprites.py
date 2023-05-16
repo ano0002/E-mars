@@ -119,7 +119,7 @@ class Ball(GameMovingSprite):
         super().move()
 
 class BreakableBrick(StaticSprite):
-    number_remaining_bumps = 5
+    number_remaining_bumps = 1
 
     def bumped(self, from_side_bumped: dict) -> None:
         if self.number_remaining_bumps > 0:
