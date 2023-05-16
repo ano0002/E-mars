@@ -5,9 +5,9 @@ from .level import Level
 from .pickaxe import Pickaxe
 from .collisions import detect_collision, detect_blocks_left, animation
 from .particles import ParticleEngine
+import time
 
-
-def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int]) -> tuple:
+def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], start_time:int,time_delta:int) -> tuple:
 
     screen_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
     screen_color = (117,64,36)  #(185,110,84)
@@ -32,6 +32,10 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int]) -> tuple:
     i_anim, i_anim2 = 200, 1
     while True:
         screen.fill(screen_color)
+        time_elapsed = int(time.time()) - start_time + time_delta
+    #display the time elapsed on the top middle of the screen
+        time_text = pygame.font.SysFont('Comic Sans MS', 30).render(str(time_elapsed), False, (255, 255, 255))
+        screen.blit(time_text,(screen_size[0]/2,0))
         if done:
             if anim is None: anim = True
             for event in pygame.event.get():
@@ -41,9 +45,11 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int]) -> tuple:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
                     detect_collision(mouse_pos, level, particle_engine)
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        return
+                if (
+                    event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_SPACE
+                ):
+                    return
         else:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
