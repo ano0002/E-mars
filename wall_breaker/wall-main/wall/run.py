@@ -43,14 +43,11 @@ def create_bricks(from_height: int, brick_map: list, screen: pygame.Surface,
                     for pos in breakable_brick_positions]
     return bricks
 
-def start():
-    screen_width: int = 1000
-    screen_height: int = 800
+def start(screen):
+    screen_width: int = 1920
+    screen_height: int = 1080
     from_height: int = 50
     pygame.init()
-    screen = pygame.display.set_mode((screen_width, screen_height),
-                                     pygame.FULLSCREEN | pygame.DOUBLEBUF )
-    screen_width, screen_height = screen.get_size()
 
     brick_map = ["XXXXXXXXXXXXX",
                  "XXXXXXXXXXXXX",
