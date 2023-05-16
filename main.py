@@ -70,8 +70,6 @@ while True:
             pygame.quit()
             exit()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                player.velocity[1] = -10
             if event.key == pygame.K_1:
                 pass
                 validated,score_bubble = gemmecatcher(screen_size=(display_width,display_height),screen=display)
