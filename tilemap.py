@@ -59,8 +59,13 @@ class Map:
             for j,elem in enumerate(line):
                 for center_piece in (205,117,29):
                     if elem == center_piece:
-                        if i == 0 or j == 0 or i == len(self.map)-1 or j == len(line)-1 :
+                        if j == 0 or j == len(line)-1:
+                            if self.test_map[i-1][j] != center_piece:
+                                self.map[i][j] = center_piece-22
                             continue
+                        if i == 0 or i == len(self.map)-1 :
+                            continue
+                        
                         if (self.test_map[i+1][j] == center_piece and 
                             self.test_map[i-1][j] == center_piece and
                             self.test_map[i][j+1] == center_piece and
