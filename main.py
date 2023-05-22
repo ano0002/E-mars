@@ -85,7 +85,7 @@ while True:
     pos_y = playing_area.offset[1]*16
     if pos_x > 1100 and pos_x < 1200 and pos_y > 14300 and pos_y < 14700 and counter_mining == 0:
         mining_game(screen=display,screen_size=(display_width,display_height),start_time=start_time,time_delta=time_delta)
-        pygame.mouse.set_cursor((8, 8), (0, 0), (1, 1, 1, 1, 1, 1, 1, 1), (1, 1, 1, 1, 1, 1, 1, 1))
+        pygame.mouse.set_cursor(*pygame.cursors.arrow)
         counter_mining += 1
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -97,7 +97,7 @@ while True:
             if event.key == pygame.K_1:
                 time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
             if event.key == pygame.K_3:
-                wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
+                time_delta = wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
                 #59, 701-705
                 for i in range(701,706):
                     playing_area.map[i][58] = 23
