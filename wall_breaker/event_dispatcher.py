@@ -1,6 +1,3 @@
-"""
-Event dispatcher
-"""
 import pygame
 from .sprites import GameMovingSprite
 
@@ -13,9 +10,6 @@ class EventDispatcher():
 
     def unsubscribe(self, controlled_moving_sprite: GameMovingSprite) -> None:
         self.controlled_moving_sprites.remove(controlled_moving_sprite)
-
-    def is_done(self) -> bool:
-        return self.is_done_status
 
     def process_event(self) -> None:
         for event in pygame.event.get():
@@ -36,3 +30,6 @@ class EventDispatcher():
             if event.type == pygame.MOUSEMOTION:
                 for controlled_moving_sprite in self.controlled_moving_sprites:
                     controlled_moving_sprite.mouse_position_move(pygame.mouse.get_pos())
+
+    def is_done(self) -> bool:
+        return self.is_done_status

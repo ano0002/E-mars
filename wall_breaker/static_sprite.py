@@ -13,7 +13,6 @@ class Image:
     perimeter: list(dict) = None
     rect: pygame.Rect = None
 
-
 @dataclass
 class Display:
     screen: pygame.Surface = None
@@ -50,12 +49,8 @@ class StaticSprite(pygame.sprite.Sprite, ABC):
         return self
 
     def set_position(self, pos_x: int, pos_y: int) -> StaticSprite:
-        if self.image is not None and self.image.rect is not None:
-            self.image.rect.x = pos_x - self.image.width // 2
-            self.image.rect.y = pos_y - self.image.height // 2
-        else:
-            print("Error trying to set a position on an image "
-                  "that does not exist yet! Set the image first!")
+        self.image.rect.x = pos_x - self.image.width // 2
+        self.image.rect.y = pos_y - self.image.height // 2
         return self
 
     def display_on_screen(self) -> None:
@@ -75,6 +70,4 @@ class StaticSprite(pygame.sprite.Sprite, ABC):
 
     @abstractmethod
     def bumped(self, from_side_bumped: dict) -> None:
-        """
-        Inform that this sprite bumbed or was bumped
-        """
+        """"""
