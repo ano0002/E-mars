@@ -15,7 +15,7 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], time_delt
     clock = pygame.time.Clock()
 
     music = pygame.mixer.music.load('./mining_game/sounds/BGM.mp3')
-    pygame.mixer.music.set_volume(0.6)   # set the volume to 40% otherwise we can't hear the sound effects
+    pygame.mixer.music.set_volume(0.4)   # set the volume to 40% otherwise we can't hear the sound effects
     music = pygame.mixer.music.play(-1)
 
     level = Level("./mining_game/bloc_pics/map.csv",screen)

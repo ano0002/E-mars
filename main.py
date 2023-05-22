@@ -86,9 +86,11 @@ while True:
     pos_x = player.rect.x
     pos_y = playing_area.offset[1]*16
     if pos_x > 1100 and pos_x < 1200 and pos_y > 14300 and pos_y < 14700 and counter_mining == 0:
-        time_delta = mining_game(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
+        time_delta = mining_game(screen=display,screen_size=(display_width,display_height),time_delta=time_delta) - 18
         pygame.mouse.set_cursor(*pygame.cursors.arrow)
         counter_mining += 1
+        music = pygame.mixer.music.load('./music/Vast Surroundings (LOOP).mp3')
+        music = pygame.mixer.music.play(-1)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
