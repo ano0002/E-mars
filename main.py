@@ -169,7 +169,7 @@ while playing:
         for i in range(701,706):
             playing_area.map[i][59] = 23
     
-    if pos_x > 800 and pos_y >7850 :
+    if pos_x > 800 and pos_y <7850 :
         playing = False
         break
     
