@@ -1,20 +1,20 @@
 """
 Main Module
 """
-from socket import fromfd
+import time
 import pygame
 # from pprint import pprint
-from wall.sprites import GameMovingSprite
-from wall.sprites import UserControlledGameMovingSprite
-from wall.sprites import Ball
-from wall.sprites import Player
-from wall.sprites import Bricks
-from wall.sprites import BreakableBrick
-from wall.collision_handler_sprites import CollisionHandlerSprites
-from wall.collision_handler import CollisionHandler
-from wall.event_dispatcher import EventDispatcher
-from wall.common import Common
-from wall.score import Score
+from .sprites import GameMovingSprite
+from .sprites import UserControlledGameMovingSprite
+from .sprites import Ball
+from .sprites import Player
+from .sprites import Bricks
+from .sprites import BreakableBrick
+from .collision_handler_sprites import CollisionHandlerSprites
+from .collision_handler import CollisionHandler
+from .event_dispatcher import EventDispatcher
+from .common import Common
+from .score import Score
 
 def create_bricks(from_height: int, brick_map: list, screen: pygame.Surface,
                   screen_width: int, screen_height: int,
@@ -43,14 +43,13 @@ def create_bricks(from_height: int, brick_map: list, screen: pygame.Surface,
                     for pos in breakable_brick_positions]
     return bricks
 
-def start():
+def wallbreaker(screen,screen_size, time_delta):
+    start_time = time.time()
     screen_width: int = 1000
     screen_height: int = 800
     from_height: int = 50
     pygame.init()
-    screen = pygame.display.set_mode((screen_width, screen_height),
-                                     pygame.FULLSCREEN | pygame.DOUBLEBUF )
-    screen_width, screen_height = screen.get_size()
+    screen_width, screen_height = screen_size
 
     brick_map = ["XXXXXXXXXXXXX",
                  "XXXXXXXXXXXXX",
@@ -105,4 +104,5 @@ def start():
 
         clock.tick(80)
 
-    pygame.quit()
+        
+    return time_delta + round(time.time() - start_time,3)

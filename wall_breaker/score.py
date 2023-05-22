@@ -3,7 +3,7 @@ Handles the score
 """
 from typing import Tuple
 import pygame
-from wall.static_sprite import Display
+from .static_sprite import Display
 
 
 class Score(pygame.sprite.Sprite):

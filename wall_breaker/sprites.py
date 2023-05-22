@@ -2,8 +2,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Tuple
 import pygame
-from wall.collision_handler import CollisionHandler
-from wall.static_sprite import StaticSprite
+from .collision_handler import CollisionHandler
+from .static_sprite import StaticSprite
 
 class GameMovingSprite(StaticSprite, ABC):
     """

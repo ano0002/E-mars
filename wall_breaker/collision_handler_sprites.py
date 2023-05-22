@@ -3,10 +3,10 @@ Handle collisions
 """
 from typing import Tuple
 #from pprint import pprint
-from wall.collision_handler import CollisionHandler
-from wall.static_sprite import StaticSprite
-from wall.sprites import GameMovingSprite
-from wall.score import Score
+from .collision_handler import CollisionHandler
+from .static_sprite import StaticSprite
+from .sprites import GameMovingSprite
+from .score import Score
 
 class CollisionHandlerSprites(CollisionHandler):
     """

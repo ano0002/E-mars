@@ -5,6 +5,8 @@ from player import Player
 from tilemap import Map, Tileset
 from gemmecatcher.gemmecatcher import gemmecatcher
 from mining_game.main import mining_game
+from wall_breaker.run import wallbreaker
+
 #from tower_defense.main import Game as TowerDefense
 pygame.init()
 
@@ -73,7 +75,7 @@ while condition:
 
 
 #start time in seconds
-start_time = int(time.time())
+start_time = round(time.time(),3)
 time_delta = 0
 
 
@@ -91,7 +93,7 @@ while True:
             if event.key == pygame.K_2:
                 pygame.mouse.set_cursor((8, 8), (0, 0), (1, 1, 1, 1, 1, 1, 1, 1), (1, 1, 1, 1, 1, 1, 1, 1))
             if event.key == pygame.K_3:
-                wall_breaker(screen=display)
+                wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
                 
                 #TowerDefense(display=display)
         if event.type == pygame.MOUSEBUTTONDOWN:

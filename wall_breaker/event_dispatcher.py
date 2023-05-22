@@ -2,7 +2,7 @@
 Event dispatcher
 """
 import pygame
-from wall.sprites import GameMovingSprite
+from .sprites import GameMovingSprite
 
 class EventDispatcher():
     is_done_status: bool = False
