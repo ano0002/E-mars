@@ -235,6 +235,8 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEWHEEL:    
                 playing_area.offset += Vector2(0,-event.y)
         playing_area.show_map(display)
+        for i in range(701,706):
+            playing_area.map[i][58] = 23
         
         """
         for collider in playing_area.get_colliders(display):
