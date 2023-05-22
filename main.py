@@ -91,7 +91,7 @@ while True:
             if event.key == pygame.K_1:
                 time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
             if event.key == pygame.K_2:
-                mining_game(screen=display,screen_size=(display_width,display_height),start_time=start_time,time_delta=time_delta)
+                pygame.mouse.set_cursor((8, 8), (0, 0), (1, 1, 1, 1, 1, 1, 1, 1), (1, 1, 1, 1, 1, 1, 1, 1))
             if event.key == pygame.K_3:
                 wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
         if event.type == pygame.MOUSEBUTTONDOWN:

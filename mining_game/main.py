@@ -9,7 +9,6 @@ import time
 
 def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], start_time:int,time_delta:int) -> tuple:
 
-    screen_size = screen_size
     screen_color = (117,64,36)  #(185,110,84)
     clock = pygame.time.Clock()
 
