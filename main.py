@@ -1,6 +1,6 @@
 import pygame
 import time
-#from moviepy.editor import*
+import cv2
 from player import Player
 from tilemap import Map, Tileset
 from gemmecatcher.gemmecatcher import gemmecatcher
@@ -10,13 +10,10 @@ from wall_breaker.run import wallbreaker
 #from tower_defense.main import Game as TowerDefense
 pygame.init()
 
-pygame.font.init
+pygame.font.init()
 
 pygame.display.set_caption('E-Mars')
 
-#INTRO
-#clip = VidoeFileClip('.\sfx\INTRO-BOOM.mpg')
-#clip.preview()
 
 #END
 #clip = VidoeFileClip('.\sfx\END-MARS-TO-EARTH.mpg')
@@ -34,11 +31,31 @@ tileset = Tileset('./tiled_map/terrain.png')
 playing_area = Map('./tiled_map/map', tileset,offset=[0,900], size=[80,45])
 player = Player(playing_area)
 
-#display_width, display_height = (pygame.display.Info().current_w, pygame.display.Info().current_h)
-#c moins beugé avec ça mais ça fait des bandes noires a cause de la taille des tiles
-#je sais pas faire mais si y a moyen de changer la taille des tiles en fonction de la taille de l'écran plutot ce serait moins beugé
 display_width, display_height = playing_area.width*16, playing_area.height*16
 display = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
+
+
+clock = pygame.time.Clock()
+
+
+#INTRO
+video = cv2.VideoCapture(".\\sfx\\INTRO-BOOM.mpg")
+
+
+
+playing = True
+while playing:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            playing = False
+            exit()
+    playing, video_image = video.read()
+    if playing:
+        video_surf = pygame.image.frombuffer(video_image.tobytes(), video_image.shape[1::-1], "BGR")
+
+    display.blit(video_surf, (0, 0))
+    pygame.display.update()
+    clock.tick(60)
 
 # load the icon image
 icon = pygame.image.load("./assets/icon.png")
@@ -48,7 +65,6 @@ pygame.display.set_icon(icon)
 #set the player to the middle of the screen
 player.rect.center = (display_width/2,2*display_height/3)
 
-clock = pygame.time.Clock()
 
 pygame.mixer.music.set_volume(0.1)
 
@@ -105,6 +121,8 @@ while not button_pressed:
     display.blit(text, text_rect)
 
     pygame.display.update()
+    clock.tick(60)
+    
 
 
 
