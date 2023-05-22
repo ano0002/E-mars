@@ -44,7 +44,7 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], time_delt
                     event.type == pygame.KEYDOWN
                     and event.key == pygame.K_SPACE
                 ):
-                    return
+                    return time_delta + round(time.time() - start_time,3)
         else:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

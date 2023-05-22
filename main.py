@@ -84,7 +84,7 @@ while True:
     pos_x = player.rect.x
     pos_y = playing_area.offset[1]*16
     if pos_x > 1100 and pos_x < 1200 and pos_y > 14300 and pos_y < 14700 and counter_mining == 0:
-        time_delta = mining_game(screen=display,screen_size=(display_width,display_height),start_time=start_time,time_delta=time_delta)
+        time_delta = mining_game(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
         pygame.mouse.set_cursor(*pygame.cursors.arrow)
         counter_mining += 1
     for event in pygame.event.get():
@@ -107,7 +107,9 @@ while True:
     display.fill((0,0,0))
     playing_area.show_map(display)
     player.draw(display)
-    time_elapsed = round(time.time() - start_time + time_delta,3)
+    time_delta += round(time.time() - start_time,3)
+    start_time = round(time.time(),3)
+    time_elapsed = round(time_delta,3)
     #display the time elapsed on the top middle of the screen
     #use Consolas font
     time_text = pygame.font.SysFont('Consolas', 30).render(str(time_elapsed), False, (255, 255, 255))
@@ -116,4 +118,3 @@ while True:
     clock.tick(60)
     pos_x = player.rect.x
     pos_y = playing_area.offset[1]*16
-    print(pos_x,pos_y)
