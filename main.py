@@ -191,10 +191,6 @@ while playing:
     time_text = consolas.render(str(time_elapsed), False, (255, 255, 255))
     display.blit(time_text,(display_width/2,0))
     
-    pos_x = player.rect.x
-    pos_y = playing_area.offset[1]*16
-    pos_pers = consolas.render(str([pos_x,pos_y]), False, (255, 255, 255))
-    display.blit(pos_pers,(0,0))
     pygame.display.update()
     clock.tick(60)
     
