@@ -56,43 +56,40 @@ def wallbreaker(screen,screen_size, time_delta):
                  "XX         XX",
                  "XX         XX",
                  "XX  XXXXXXXXX",
-                 "XX XX        ",
-                 "XX  XX       ",
-                 "XX   XX      ",
+                 "   XX        ",
+                 "XX  XX    XX ",
+                 "XX   XX   XX ",
                  "XX    XX     ",
-                 "XX     XX    ",
+                 "       XX    ",
                  "XX      XX   "]
 
     pygame.display.set_caption('Wall breaker')
     score_height = 80
     score: Score = Score(screen, score_height)
+    finish = Bricks()
     collision_handler: CollisionHandler = CollisionHandlerSprites(score)
-    player: UserControlledGameMovingSprite = Player(screen)\
-        .set_image(90, 72, Common.PING_IMAGE_NAME)\
-            .set_position(screen_width // 2, screen_height - 36)\
-                .set_collision_handler(collision_handler)
-
     ball: GameMovingSprite = Ball(screen)\
         .set_image(10, 10, Common.BALL_IMAGE_NAME)\
             .set_position(screen_width // 2, 4 * screen_height // 5)\
                 .set_collision_handler(collision_handler)
-
+    player: UserControlledGameMovingSprite = Player(screen)\
+        .set_image(90, 72, Common.PING_IMAGE_NAME)\
+            .set_position(screen_width // 2, screen_height - 36)\
+                .set_collision_handler(collision_handler)
     event_dispatcher: EventDispatcher = EventDispatcher()
     event_dispatcher.subscribe(player)
     collision_handler.subscribe_moving(player)
     collision_handler.subscribe_moving(ball)
-
     bricks = create_bricks(from_height, brick_map, screen, screen_width, screen_height, collision_handler)
     for brick in bricks:
         collision_handler.subscribe_static(brick)
 
     clock: pygame.time.Clock = pygame.time.Clock()
 
-    while not event_dispatcher.is_done():
+    while not event_dispatcher.is_done() and finish.breaked < 5:
         event_dispatcher.process_event()
         player.move()
         ball.move()
-
         screen.fill(Common.BLACK)
         player.display_on_screen()
         ball.display_on_screen()
@@ -101,7 +98,6 @@ def wallbreaker(screen,screen_size, time_delta):
             brick.display_on_screen()
 
         pygame.display.flip()
-
         clock.tick(80)
 
         
