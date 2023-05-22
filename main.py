@@ -92,23 +92,22 @@ while True:
             pygame.quit()
             exit()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                player.velocity[1] = -10
             if event.key == pygame.K_1:
                 time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
             if event.key == pygame.K_3:
                 time_delta = wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
                 #59, 701-705
                 for i in range(701,706):
-                    playing_area.map[i][58] = 23
+                    playing_area.map[i][59] = 23
         if event.type == pygame.MOUSEBUTTONDOWN:
-            player.shoot(mouse_pos=pygame.mouse.get_pos())
+            if event.button == 1:
+                player.shoot(mouse_pos=pygame.mouse.get_pos())
     player.update(display)
     display.fill((0,0,0))
     playing_area.show_map(display)
     player.draw(display)
-    time_delta += round(time.time() - start_time,3)
-    start_time = round(time.time(),3)
+    time_delta += time.time() - start_time
+    start_time = time.time()
     time_elapsed = round(time_delta,3)
     #display the time elapsed on the top middle of the screen
     #use Consolas font
