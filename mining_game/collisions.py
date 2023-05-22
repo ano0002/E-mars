@@ -46,6 +46,8 @@ def detect_collision(mousepos, level, particle_engine):
                         particle_engine.create_particles(mousepos[0], mousepos[1], 5, (255, 136, 24), 1)
                         particle_engine.create_particles(mousepos[0], mousepos[1], 5, (255, 229, 32), 1)
                         particle_engine.create_particles(mousepos[0], mousepos[1], 5, (0, 0, 0), 1)
+                        sprite.index = -1
+                        sprite.image = pygame.Surface((0, 0))
                         return True
                 else:
                     ston = pygame.mixer.Sound("./mining_game/sounds/stone.mp3")
@@ -61,6 +63,8 @@ def detect_collision(mousepos, level, particle_engine):
                         particle_engine.create_particles(mousepos[0], mousepos[1], 5, (255, 136, 24), 1)
                         particle_engine.create_particles(mousepos[0], mousepos[1], 5, (255, 229, 32), 1)
                         particle_engine.create_particles(mousepos[0], mousepos[1], 5, (0, 0, 0), 1)
+                        sprite.index = -1
+                        sprite.image = pygame.Surface((0, 0))
                         return True
                     elif sprite.index in (7, 12, 14): particle_engine.create_particles(mousepos[0], mousepos[1], 5, (221,164,126))
                     elif sprite.index == 8: particle_engine.create_particles(mousepos[0], mousepos[1], 5, (17,12,20))
