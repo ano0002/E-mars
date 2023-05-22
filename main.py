@@ -78,9 +78,15 @@ while condition:
 start_time = round(time.time(),3)
 time_delta = 0
 
-
+counter_mining = 0
 
 while True:
+    pos_x = player.rect.x
+    pos_y = playing_area.offset[1]*16
+    if pos_x > 1100 and pos_x < 1200 and pos_y > 14300 and pos_y < 14700 and counter_mining == 0:
+        mining_game(screen=display,screen_size=(display_width,display_height),start_time=start_time,time_delta=time_delta)
+        pygame.mouse.set_cursor((8, 8), (0, 0), (1, 1, 1, 1, 1, 1, 1, 1), (1, 1, 1, 1, 1, 1, 1, 1))
+        counter_mining += 1
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -90,9 +96,6 @@ while True:
                 player.velocity[1] = -10
             if event.key == pygame.K_1:
                 time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
-            if event.key == pygame.K_2:
-                mining_game(screen=display,screen_size=(display_width,display_height),start_time=start_time,time_delta=time_delta)
-                pygame.mouse.set_cursor(*pygame.cursors.arrow)
             if event.key == pygame.K_3:
                 wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
                 #59, 701-705
@@ -111,3 +114,6 @@ while True:
     display.blit(time_text,(display_width/2,0))
     pygame.display.update()
     clock.tick(60)
+    pos_x = player.rect.x
+    pos_y = playing_area.offset[1]*16
+    print(pos_x,pos_y)
