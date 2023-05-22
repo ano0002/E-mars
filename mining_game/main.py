@@ -9,10 +9,7 @@ import time
 
 def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], start_time:int,time_delta:int) -> tuple:
 
-    screen_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
     screen_color = (117,64,36)  #(185,110,84)
-    screen = pygame.display.set_mode(screen_size, pygame.FULLSCREEN)
-    pygame.display.set_caption("MINING ALL DAY")
     clock = pygame.time.Clock()
 
     music = pygame.mixer.music.load('./mining_game/sounds/BGM.mp3')
