@@ -87,7 +87,6 @@ def wallbreaker(screen,screen_size, time_delta):
         score.display_on_screen()
         for brick in bricks:
             brick.display_on_screen()
-        print( sum([brick.number_remaining_bumps+1 for brick in bricks]) )
         if sum([brick.number_remaining_bumps+1 for brick in bricks]) == 0:
              return time_delta + round(time.time() - start_time,3) + score.score
         pygame.display.flip()
