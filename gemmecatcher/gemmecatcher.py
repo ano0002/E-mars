@@ -1,6 +1,8 @@
 
 import pygame
 import random
+import time
+
 def gemmecatcher(screen_size,screen,delta_time):
 
     # Set the title of the game window
@@ -15,6 +17,11 @@ def gemmecatcher(screen_size,screen,delta_time):
 
     # Load the bubble image
     bubble_image = pygame.transform.scale(pygame.image.load('.\\gemmecatcher\\gemme_python.png'),(20, 30))
+
+    # Load the font
+    consolas = pygame.font.SysFont('Consolas', 30)
+
+    start_time = time.time()
 
     # Define the bubble class
     class Bubble:
@@ -122,8 +129,15 @@ def gemmecatcher(screen_size,screen,delta_time):
             text_rect = text.get_rect()
             text_rect.center = (screen_size[0] // 2, screen_size[1] // 2)
             screen.blit(text, text_rect)
-            return delta_time
+            return delta_time + time.time() - start_time
             
+            
+        time_text = consolas.render(str(round(+ time.time() - start_time,3)), False, (255, 255, 255))
+        time_text_rect = time_text.get_rect()
+        time_text_rect.centerx = screen_size[0] // 2
+        screen.blit(time_text, time_text_rect)
+        
+        
         # Update the screen
         pygame.display.update()
 
