@@ -96,12 +96,6 @@ while True:
                 player.velocity[1] = -10
             if event.key == pygame.K_1:
                 time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
-<<<<<<< Updated upstream
-            if event.key == pygame.K_2:
-                mining_game(screen=display,screen_size=(display_width,display_height),start_time=start_time,time_delta=time_delta)
-                pygame.mouse.set_cursor(*pygame.cursors.arrow)
-=======
->>>>>>> Stashed changes
             if event.key == pygame.K_3:
                 wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
                 #59, 701-705
