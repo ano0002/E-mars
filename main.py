@@ -30,7 +30,7 @@ pygame.display.set_caption('E-Mars')
 #set the display to full screen
 
 tileset = Tileset('./tiled_map/terrain.png')
-playing_area = Map('./tiled_map/map', tileset,offset=[0,100], size=[80,45])
+playing_area = Map('./tiled_map/map', tileset,offset=[0,900], size=[80,45])
 player = Player(playing_area)
 
 #display_width, display_height = (pygame.display.Info().current_w, pygame.display.Info().current_h)
@@ -51,7 +51,7 @@ clock = pygame.time.Clock()
 
 music = pygame.mixer.music.load('./music/Vast Surroundings (LOOP).mp3')
 
-music = pygame.mixer.music.play(-1)
+#music = pygame.mixer.music.play(-1)
 
 # menu loop
 condition = True
@@ -91,20 +91,19 @@ while True:
             if event.key == pygame.K_1:
                 time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
             if event.key == pygame.K_2:
-                pygame.mouse.set_cursor((8, 8), (0, 0), (1, 1, 1, 1, 1, 1, 1, 1), (1, 1, 1, 1, 1, 1, 1, 1))
+                mining_game(screen=display,screen_size=(display_width,display_height),start_time=start_time,time_delta=time_delta)
             if event.key == pygame.K_3:
                 wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
-                
-                #TowerDefense(display=display)
         if event.type == pygame.MOUSEBUTTONDOWN:
             player.shoot(mouse_pos=pygame.mouse.get_pos())
     player.update(display)
     display.fill((0,0,0))
     playing_area.show_map(display)
     player.draw(display)
-    time_elapsed = round(time.time(),3) - start_time + time_delta
+    time_elapsed = round(time.time() - start_time + time_delta,3)
     #display the time elapsed on the top middle of the screen
-    time_text = pygame.font.SysFont('Comic Sans MS', 30).render(str(time_elapsed), False, (255, 255, 255))
+    #use Consolas font
+    time_text = pygame.font.SysFont('Consolas', 30).render(str(time_elapsed), False, (255, 255, 255))
     display.blit(time_text,(display_width/2,0))
     pygame.display.update()
     clock.tick(60)

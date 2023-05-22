@@ -40,8 +40,8 @@ class Map:
         }
         
     def load_map(self):
-        with open(self.map_file+"_Background.csv", 'r') as back:
-            with open(self.map_file+"_Platforms.csv", 'r') as platforms:
+        with open(f"{self.map_file}_Background.csv", 'r') as back:
+            with open(f"{self.map_file}_Platforms.csv", 'r') as platforms:
                 for i,line in enumerate(platforms):
                     backline =  [int(l) for l in back.readline().split(",")]
                     temp = [int(l) for l in line.split(",")]
@@ -59,13 +59,13 @@ class Map:
             for j,elem in enumerate(line):
                 for center_piece in (205,117,29):
                     if elem == center_piece:
-                        if j == 0 or j == len(line)-1:
+                        if j in [0, len(line) - 1]:
                             if self.test_map[i-1][j] != center_piece:
                                 self.map[i][j] = center_piece-22
                             continue
-                        if i == 0 or i == len(self.map)-1 :
+                        if i in [0, len(self.map) - 1]:
                             continue
-                        
+
                         if (self.test_map[i+1][j] == center_piece and 
                             self.test_map[i-1][j] == center_piece and
                             self.test_map[i][j+1] == center_piece and

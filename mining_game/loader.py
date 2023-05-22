@@ -15,7 +15,7 @@ def import_csv_layout(path):
 		return list(zip(*blocks_map[::-1]))   # blocks_map
 
 
-if "__main__" == __name__:   # testing
-    path = "./bloc_pics/map.csv"
-    for i in import_csv_layout(path):
-        print(i)
+if __name__ == "__main__":   # testing
+	path = "./bloc_pics/map.csv"
+	for i in import_csv_layout(path):
+	    print(i)

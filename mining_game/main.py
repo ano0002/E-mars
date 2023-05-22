@@ -9,10 +9,8 @@ import time
 
 def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], start_time:int,time_delta:int) -> tuple:
 
-    screen_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
+    screen_size = screen_size
     screen_color = (117,64,36)  #(185,110,84)
-    screen = pygame.display.set_mode(screen_size, pygame.FULLSCREEN)
-    pygame.display.set_caption("MINING ALL DAY")
     clock = pygame.time.Clock()
 
     music = pygame.mixer.music.load('./mining_game/sounds/BGM.mp3')
@@ -32,10 +30,6 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], start_tim
     i_anim, i_anim2 = 200, 1
     while True:
         screen.fill(screen_color)
-        time_elapsed = int(time.time()) - start_time + time_delta
-    #display the time elapsed on the top middle of the screen
-        time_text = pygame.font.SysFont('Comic Sans MS', 30).render(str(time_elapsed), False, (255, 255, 255))
-        screen.blit(time_text,(screen_size[0]/2,0))
         if done:
             if anim is None: anim = True
             for event in pygame.event.get():
@@ -79,5 +73,11 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], start_tim
         pickaxe.update(mouse_x, mouse_y)
         pickaxe.draw(screen)   # Pickaxe
 
+        time_elapsed = int(time.time()) - start_time + time_delta
+    #display the time elapsed on the top middle of the screen
+        time_text = pygame.font.SysFont('Comic Sans MS', 30).render(str(int(time_elapsed)), False, (255, 255, 255))
+        screen.blit(time_text,(screen_size[0]/2,0))
+
         pygame.display.update()
         clock.tick(60)
+    return time_delta
