@@ -14,7 +14,7 @@ def gemmecatcher(screen_size,screen,delta_time):
 
 
     # Load the bubble image
-    bubble_image = pygame.transform.scale(pygame.image.load('.\\gemmecatcher\\gemme_python.png'),(32, 64))
+    bubble_image = pygame.transform.scale(pygame.image.load('.\\gemmecatcher\\gemme_python.png'),(20, 30))
 
     # Define the bubble class
     class Bubble:
