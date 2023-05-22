@@ -81,7 +81,7 @@ start_time = round(time.time(),3)
 time_delta = 0
 
 counter_mining = 0
-
+counter_wallbreaker = 0
 while True:
     pos_x = player.rect.x
     pos_y = playing_area.offset[1]*16
@@ -92,20 +92,19 @@ while True:
         music = pygame.mixer.music.load('./music/Vast Surroundings (LOOP).mp3')
         music = pygame.mixer.music.play(-1)
         start_time = time.time()
+    #911 10798
+    if pos_x > 890 and pos_x < 1050 and pos_y > 10770 and pos_y < 10800 and counter_wallbreaker == 0:
+        time_delta = wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_1:
-                time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
-            if event.key == pygame.K_3:
-                time_delta = wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
-                for i in range(701,706):
-                    playing_area.map[i][59] = 23
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                player.shoot(mouse_pos=pygame.mouse.get_pos())
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+            time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
+            for i in range(701,706):
+                playing_area.map[i][59] = 23
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            player.shoot(mouse_pos=pygame.mouse.get_pos())
     player.update(display)
     display.fill((0,0,0))
     playing_area.show_map(display)
