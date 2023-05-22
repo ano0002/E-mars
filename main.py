@@ -1,4 +1,5 @@
 import pygame
+import time
 #from moviepy.editor import*
 from player import Player
 from tilemap import Map, Tileset
@@ -50,6 +51,33 @@ music = pygame.mixer.music.load('./music/Vast Surroundings (LOOP).mp3')
 
 music = pygame.mixer.music.play(-1)
 
+# menu loop
+condition = True
+while condition:
+    #use the standard map as a background display a message and wait for the user to press space
+    display.fill((0,0,0))
+    playing_area.show_map(display)
+    text = pygame.font.SysFont('Comic Sans MS', 30).render('Press space to start', False, (255, 255, 255))
+    #display welcome message on top of the previous message
+    text_welcome = pygame.font.SysFont('Comic Sans MS', 30).render('Welcome to E-Mars', False, (255, 255, 255))
+    display.blit(text_welcome,(display_width/2-text.get_width()/2,display_height/2-60))
+    display.blit(text,(display_width/2-text_welcome.get_width()/2,display_height/2+25))
+    pygame.display.update()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            condition = False
+
+
+
+#start time in seconds
+start_time = int(time.time())
+time_delta = 0
+
+
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -59,11 +87,12 @@ while True:
             if event.key == pygame.K_SPACE:
                 player.velocity[1] = -10
             if event.key == pygame.K_1:
-                deltatime= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=0)
+                time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
             if event.key == pygame.K_2:
-                mining_game(screen=display,screen_size=(display_width,display_height))
-                #show back the default cursor
                 pygame.mouse.set_cursor((8, 8), (0, 0), (1, 1, 1, 1, 1, 1, 1, 1), (1, 1, 1, 1, 1, 1, 1, 1))
+            if event.key == pygame.K_3:
+                wall_breaker(screen=display)
+                
                 #TowerDefense(display=display)
         if event.type == pygame.MOUSEBUTTONDOWN:
             player.shoot(mouse_pos=pygame.mouse.get_pos())
@@ -71,5 +100,9 @@ while True:
     display.fill((0,0,0))
     playing_area.show_map(display)
     player.draw(display)
+    time_elapsed = round(time.time(),3) - start_time + time_delta
+    #display the time elapsed on the top middle of the screen
+    time_text = pygame.font.SysFont('Comic Sans MS', 30).render(str(time_elapsed), False, (255, 255, 255))
+    display.blit(time_text,(display_width/2,0))
     pygame.display.update()
     clock.tick(60)
