@@ -55,24 +55,54 @@ music = pygame.mixer.music.load('./music/Vast Surroundings (LOOP).mp3')
 
 music = pygame.mixer.music.play(-1)
 
-# menu loop
-condition = True
-while condition:
-    #use the standard map as a background display a message and wait for the user to press space
-    display.fill((0,0,0))
-    playing_area.show_map(display)
-    text = pygame.font.SysFont('Comic Sans MS', 30).render('Press space to start', False, (255, 255, 255))
-    #display welcome message on top of the previous message
-    text_welcome = pygame.font.SysFont('Comic Sans MS', 30).render('Welcome to E-Mars', False, (255, 255, 255))
-    display.blit(text_welcome,(display_width/2-text.get_width()/2,display_height/2-60))
-    display.blit(text,(display_width/2-text_welcome.get_width()/2,display_height/2+25))
-    pygame.display.update()
+
+
+# menu loop  
+padding = 15
+text = pygame.font.SysFont('Consolas', 30).render('Press space to start', False, (255, 255, 255))
+text_rect=text.get_rect(center=(display_width/2, display_height/2+25))
+button_rect = text.get_rect(center=(display_width/2, display_height/2+25))
+button_rect.x -= padding
+button_rect.y -= padding
+button_rect.width += padding*2
+button_rect.height += padding*2
+button_pressed = False
+
+while not button_pressed:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            condition = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                button_pressed = True
+        elif event.type == pygame.MOUSEBUTTONDOWN :
+            if button_rect.collidepoint(event.pos) :
+                button_pressed=True
+
+
+
+    display.fill((0,0,0))
+    playing_area.show_map(display)
+
+    # Draw button
+    button_color = (255, 255, 255) if button_rect.collidepoint (pygame.mouse.get_pos()) else (190, 190, 190)
+    pygame.draw.rect(display, button_color, button_rect, 4)
+
+    # Display text  
+    text_welcome2 = pygame.font.match_font('Consolas', 35).render('Welcome to E-Mars', False, (000, 000, 000))
+    text_welcome = pygame.font.SysFont('Consolas', 30).render('Welcome to E-Mars', False, (255, 255, 255))
+    display.blit(text_welcome2,(display_width/2-text_welcome2.get_width()/2,display_height/2-62))
+    display.blit(text_welcome,(display_width/2-text_welcome.get_width()/2,display_height/2-60))
+    display.blit(text, text_rect)
+
+    pygame.display.update()
+
+
+
+
+
+
 
 
 
