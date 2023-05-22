@@ -51,8 +51,17 @@ def wallbreaker(screen,screen_size, time_delta):
     pygame.init()
     screen_width, screen_height = screen_size
 
-    brick_map = ["XXXXXXXXXXXXX",
-                 "XXXXXXXXXXXXX"]
+    brick_map = ["  XXXXX   XXX",
+                 "    XXXXXXXXX",
+                 "XX         XX",
+                 "XX         XX",
+                 "XX  XXXXXXXXX",
+                 "   XX        ",
+                 "XX  XX    XX ",
+                 "XX   XX   XX ",
+                 "XX    XX     ",
+                 "       XX    ",
+                 "XX      XX   "]
 
     pygame.display.set_caption('Wall breaker')
     score_height = 80
