@@ -52,16 +52,7 @@ def wallbreaker(screen,screen_size, time_delta):
     screen_width, screen_height = screen_size
 
     brick_map = ["XXXXXXXXXXXXX",
-                 "XXXXXXXXXXXXX",
-                 "XX         XX",
-                 "XX         XX",
-                 "XX  XXXXXXXXX",
-                 "   XX        ",
-                 "XX  XX    XX ",
-                 "XX   XX   XX ",
-                 "XX    XX     ",
-                 "       XX    ",
-                 "XX      XX   "]
+                 "XXXXXXXXXXXXX"]
 
     pygame.display.set_caption('Wall breaker')
     score_height = 80
@@ -96,9 +87,11 @@ def wallbreaker(screen,screen_size, time_delta):
         score.display_on_screen()
         for brick in bricks:
             brick.display_on_screen()
-
+        print( sum([brick.number_remaining_bumps+1 for brick in bricks]) )
+        if sum([brick.number_remaining_bumps+1 for brick in bricks]) == 0:
+             return time_delta + round(time.time() - start_time,3) + score.score
         pygame.display.flip()
         clock.tick(80)
 
         
-    return time_delta + round(time.time() - start_time,3)
+    return time_delta + round(time.time() - start_time,3) + score.score

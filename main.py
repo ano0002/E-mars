@@ -97,7 +97,7 @@ while True:
                 wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
                 #59, 701-705
                 for i in range(701,706):
-                    playing_area.map[59][i] = 23
+                    playing_area.map[i][58] = 23
         if event.type == pygame.MOUSEBUTTONDOWN:
             player.shoot(mouse_pos=pygame.mouse.get_pos())
     player.update(display)
