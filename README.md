@@ -6,4 +6,7 @@ Messrs LAURENT, PREVOTAT, SIMON, SOT and Ms CORDIER offer you a mission: E-MARS.
 
 
 
-/!\ To start the game, make sure you have downloaded the entire "E-MARS" file, and that you have a recent and up-to-date Python program.
+/!\ To start the game, make sure you have downloaded the entire "E-MARS" file, and that you have a recent and up-to-date Python program. You also need pygame and opencv-python to run the game. /!\
+
+    pip install pygame
+    pip install opencv-python

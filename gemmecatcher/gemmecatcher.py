@@ -132,7 +132,7 @@ def gemmecatcher(screen_size,screen,delta_time):
             return delta_time + time.time() - start_time
             
             
-        time_text = consolas.render(str(round(+ time.time() - start_time,3)), False, (255, 255, 255))
+        time_text = consolas.render(str(round(delta_time + time.time() - start_time,3)), False, (255, 255, 255))
         time_text_rect = time_text.get_rect()
         time_text_rect.centerx = screen_size[0] // 2
         screen.blit(time_text, time_text_rect)

@@ -218,3 +218,4 @@ if opencv :
         clock.tick(fps)
         
 print("You have finished the game in",time_delta,"seconds")
+input("Press enter to exit")
