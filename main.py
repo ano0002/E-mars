@@ -49,9 +49,11 @@ player.rect.center = (display_width/2,2*display_height/3)
 
 clock = pygame.time.Clock()
 
+pygame.mixer.music.set_volume(0.1)
+
 music = pygame.mixer.music.load('./music/Vast Surroundings (LOOP).mp3')
 
-#music = pygame.mixer.music.play(-1)
+music = pygame.mixer.music.play(-1)
 
 # menu loop
 condition = True
@@ -96,7 +98,6 @@ while True:
                 time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
             if event.key == pygame.K_3:
                 time_delta = wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
-                #59, 701-705
                 for i in range(701,706):
                     playing_area.map[i][59] = 23
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -113,7 +114,11 @@ while True:
     #use Consolas font
     time_text = pygame.font.SysFont('Consolas', 30).render(str(time_elapsed), False, (255, 255, 255))
     display.blit(time_text,(display_width/2,0))
-    pygame.display.update()
-    clock.tick(60)
+    
     pos_x = player.rect.x
     pos_y = playing_area.offset[1]*16
+    pos_pers = pygame.font.SysFont('Consolas', 30).render(str([pos_x,pos_y]), False, (255, 255, 255))
+    display.blit(pos_pers,(0,0))
+    pygame.display.update()
+    clock.tick(60)
+    

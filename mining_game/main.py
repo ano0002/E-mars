@@ -44,7 +44,7 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], time_delt
                     event.type == pygame.KEYDOWN
                     and event.key == pygame.K_SPACE
                 ):
-                    return time_delta + round(time.time() - start_time,3)
+                    return time_elapsed
         else:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -76,9 +76,9 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], time_delt
         pickaxe.update(mouse_x, mouse_y)
         pickaxe.draw(screen)   # Pickaxe
 
-        time_elapsed = time_delta + round(time.time() - start_time,3)
+        time_elapsed =round(time_delta + time.time() - start_time,3)
     #display the time elapsed on the top middle of the screen
-        time_text = pygame.font.SysFont('Comic Sans MS', 30).render(str(int(time_elapsed)), False, (255, 255, 255))
+        time_text = pygame.font.SysFont('Consolas', 30).render(str(time_elapsed), False, (255, 255, 255))
         screen.blit(time_text,(screen_size[0]/2,0))
 
         pygame.display.update()
