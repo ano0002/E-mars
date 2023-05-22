@@ -1,16 +1,10 @@
-"""
-Handles the score
-"""
 from typing import Tuple
 import pygame
 from wall.static_sprite import Display
 
-
 class Score(pygame.sprite.Sprite):
     font: pygame.font = None
-    score: int = 0
-    red: Tuple[int, int, int] = (255, 0, 0)
-    black: Tuple[int, int, int] = (0, 0, 0)
+    score: int = -10
     green: Tuple[int, int, int] = (0, 255, 0)
     blue: Tuple[int, int, int] = (0, 0, 255)
     display: Display = None
@@ -29,9 +23,6 @@ class Score(pygame.sprite.Sprite):
 
     def get_score_images(self):
         color_score: Tuple[int, int, int] = self.green
-        if self.score < 0:
-            color_score = self.red
-
         text_surface = self.font.render('Your score: ', False, self.blue)
         score_surface = self.font.render(str(self.score), False, color_score)
         return text_surface, score_surface
