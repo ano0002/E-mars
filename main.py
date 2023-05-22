@@ -7,7 +7,6 @@ from gemmecatcher.gemmecatcher import gemmecatcher
 from mining_game.main import mining_game
 from wall_breaker.run import wallbreaker
 
-#from tower_defense.main import Game as TowerDefense
 pygame.init()
 
 pygame.font.init()
@@ -25,6 +24,12 @@ pygame.display.set_caption('E-Mars')
 
 
 
+# load the icon image
+icon = pygame.image.load("./assets/icon.png")
+# set the taskbar icon
+pygame.display.set_icon(icon)
+
+
 #set the display to full screen
 
 tileset = Tileset('./tiled_map/terrain.png')
@@ -40,7 +45,7 @@ clock = pygame.time.Clock()
 
 #INTRO
 video = cv2.VideoCapture(".\\sfx\\INTRO-BOOM.mpg")
-
+fps = video.get(cv2.CAP_PROP_FPS)
 
 
 playing = True
@@ -52,15 +57,12 @@ while playing:
     playing, video_image = video.read()
     if playing:
         video_surf = pygame.image.frombuffer(video_image.tobytes(), video_image.shape[1::-1], "BGR")
+        video_surf = pygame.transform.scale(video_surf, (display_width, display_height))
 
     display.blit(video_surf, (0, 0))
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(fps)
 
-# load the icon image
-icon = pygame.image.load("./assets/icon.png")
-# set the taskbar icon
-pygame.display.set_icon(icon)
 
 #set the player to the middle of the screen
 player.rect.center = (display_width/2,2*display_height/3)
