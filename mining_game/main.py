@@ -74,7 +74,7 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], start_tim
         pickaxe.update(mouse_x, mouse_y)
         pickaxe.draw(screen)   # Pickaxe
 
-        time_elapsed = int(time.time()) - start_time + time_delta
+        time_elapsed = time_delta
     #display the time elapsed on the top middle of the screen
         time_text = pygame.font.SysFont('Comic Sans MS', 30).render(str(int(time_elapsed)), False, (255, 255, 255))
         screen.blit(time_text,(screen_size[0]/2,0))
