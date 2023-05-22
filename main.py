@@ -170,15 +170,13 @@ while playing:
             playing_area.map[i][59] = 23
     
     if pos_x > 800 and pos_y >7850 :
+        playing = False
         break
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
-            playing = False
-            break
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             player.shoot(mouse_pos=pygame.mouse.get_pos())
     player.update(display)
