@@ -50,7 +50,10 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], start_tim
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
-                    detect_collision(mouse_pos, level, particle_engine)
+                    bombs = detect_collision(mouse_pos, level, particle_engine)
+                    if bombs:
+                        #bomb_exploded
+                        pass
 
         level.run()   # Blocks
 
