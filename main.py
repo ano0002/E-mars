@@ -149,7 +149,10 @@ time_delta = 0
 
 counter_mining = 0
 counter_wallbreaker = 0
-while True:
+
+playing = True
+
+while playing:
     pos_x = player.rect.x
     pos_y = playing_area.offset[1]*16
     if pos_x > 1100 and pos_x < 1200 and pos_y > 14300 and pos_y < 14700 and counter_mining == 0:
@@ -165,14 +168,17 @@ while True:
         counter_wallbreaker += 1
         for i in range(701,706):
             playing_area.map[i][59] = 23
+    
+    if pos_x > 800 and pos_y >7850 :
+        break
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
         if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
-            time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
-            for i in range(701,706):
-                playing_area.map[i][59] = 23
+            playing = False
+            break
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             player.shoot(mouse_pos=pygame.mouse.get_pos())
     player.update(display)
@@ -194,10 +200,11 @@ while True:
     pygame.display.update()
     clock.tick(60)
     
+time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
 
 if opencv :
     #OUTRO
-    video = cv2.VideoCapture(".\\sfx\\INTRO-BOOM.mpg")
+    video = cv2.VideoCapture(".\\sfx\\END-MARS-TO-EARTH.mpg")
     fps = video.get(cv2.CAP_PROP_FPS)
 
 
@@ -215,3 +222,5 @@ if opencv :
         display.blit(video_surf, (0, 0))
         pygame.display.update()
         clock.tick(fps)
+        
+print("You have finished the game in",time_delta,"seconds")
