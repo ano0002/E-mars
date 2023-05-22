@@ -52,8 +52,7 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], start_tim
                     mouse_pos = pygame.mouse.get_pos()
                     bombs = detect_collision(mouse_pos, level, particle_engine)
                     if bombs:
-                        #bomb_exploded
-                        pass
+                        time_delta += 30
 
         level.run()   # Blocks
 
