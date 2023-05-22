@@ -1,6 +1,13 @@
 import pygame
 import time
-import cv2
+try :
+    import cv2
+    opencv = True
+except :
+    print("OpenCV not installed")
+    print("Please install OpenCV with the command : pip install opencv-python")
+    print("If you want the full experience")
+    opencv = False
 from player import Player
 from tilemap import Map, Tileset
 from gemmecatcher.gemmecatcher import gemmecatcher
@@ -43,25 +50,27 @@ display = pygame.display.set_mode((display_width, display_height),pygame.FULLSCR
 clock = pygame.time.Clock()
 
 
-#INTRO
-video = cv2.VideoCapture(".\\sfx\\INTRO-BOOM.mpg")
-fps = video.get(cv2.CAP_PROP_FPS)
+if opencv :
+    
+    #INTRO
+    video = cv2.VideoCapture(".\\sfx\\INTRO-BOOM.mpg")
+    fps = video.get(cv2.CAP_PROP_FPS)
 
 
-playing = True
-while playing:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            playing = False
-            exit()
-    playing, video_image = video.read()
-    if playing:
-        video_surf = pygame.image.frombuffer(video_image.tobytes(), video_image.shape[1::-1], "BGR")
-        video_surf = pygame.transform.scale(video_surf, (display_width, display_height))
+    playing = True
+    while playing:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                playing = False
+                exit()
+        playing, video_image = video.read()
+        if playing:
+            video_surf = pygame.image.frombuffer(video_image.tobytes(), video_image.shape[1::-1], "BGR")
+            video_surf = pygame.transform.scale(video_surf, (display_width, display_height))
 
-    display.blit(video_surf, (0, 0))
-    pygame.display.update()
-    clock.tick(fps)
+        display.blit(video_surf, (0, 0))
+        pygame.display.update()
+        clock.tick(fps)
 
 
 #set the player to the middle of the screen
@@ -185,3 +194,24 @@ while True:
     pygame.display.update()
     clock.tick(60)
     
+
+if opencv :
+    #OUTRO
+    video = cv2.VideoCapture(".\\sfx\\INTRO-BOOM.mpg")
+    fps = video.get(cv2.CAP_PROP_FPS)
+
+
+    playing = True
+    while playing:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                playing = False
+                exit()
+        playing, video_image = video.read()
+        if playing:
+            video_surf = pygame.image.frombuffer(video_image.tobytes(), video_image.shape[1::-1], "BGR")
+            video_surf = pygame.transform.scale(video_surf, (display_width, display_height))
+
+        display.blit(video_surf, (0, 0))
+        pygame.display.update()
+        clock.tick(fps)
