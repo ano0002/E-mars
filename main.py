@@ -1,8 +1,8 @@
 import pygame
 #from moviepy.editor import*
 from player import Player
-from tilemap import Map,Tileset
-#from gemmecatcher.gemmecatcher import gemmecatcher
+from tilemap import Map, Tileset
+from gemmecatcher.gemmecatcher import gemmecatcher
 from mining_game.main import mining_game
 #from tower_defense.main import Game as TowerDefense
 pygame.init()
@@ -59,7 +59,7 @@ while True:
             if event.key == pygame.K_SPACE:
                 player.velocity[1] = -10
             if event.key == pygame.K_1:
-                validated,score_bubble = gemmecatcher(screen_size=(display_width,display_height),screen=display)
+                deltatime= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=0)
             if event.key == pygame.K_2:
                 mining_game(screen=display,screen_size=(display_width,display_height))
                 #show back the default cursor
