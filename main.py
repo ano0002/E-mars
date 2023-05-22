@@ -96,6 +96,8 @@ while True:
     if pos_x > 890 and pos_x < 1050 and pos_y > 10770 and pos_y < 10800 and counter_wallbreaker == 0:
         time_delta = wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
         counter_wallbreaker += 1
+        for i in range(701,706):
+            playing_area.map[i][59] = 23
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
