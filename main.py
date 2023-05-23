@@ -212,7 +212,7 @@ while playing:
     display.blit(time_text,(display_width/2,0))
     
     if bubble_index < 3 :
-        display.blit(bubbles[bubble_index],(display_width/2-bubbles[bubble_index].get_width()/2,display_height/2-bubbles[bubble_index].get_height()/2))
+        display.blit(bubbles[bubble_index],(display_width/2-bubbles[bubble_index].get_width()/2,display_height-bubbles[bubble_index].get_height()))
     
     pygame.display.update()
     clock.tick(60)
