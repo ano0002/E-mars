@@ -26,36 +26,47 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], time_delt
 
     particle_engine = ParticleEngine(50)   # maximum of 50 particles on screen at once
 
+    bubble = pygame.image.load("./set_bubbles/5_mininggame.png")
+    is_bubble = True
+
     done = False
     anim = None
     i_anim, i_anim2 = 200, 1
     while True:
         screen.fill(screen_color)
-        if done:
-            if anim is None: anim = True
+        if is_bubble:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = pygame.mouse.get_pos()
-                    detect_collision(mouse_pos, level, particle_engine)
-                if (
-                    event.type == pygame.KEYDOWN
-                    and event.key == pygame.K_SPACE
-                ):
-                    return time_delta
-        else:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
+                    is_bubble = False
+        else :
+            if done:
+                if anim is None: anim = True
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        exit()
+                    if event.type == pygame.MOUSEBUTTONDOWN:
                         mouse_pos = pygame.mouse.get_pos()
-                        bombs = detect_collision(mouse_pos, level, particle_engine)
-                        if bombs:
-                            time_delta += 30
+                        detect_collision(mouse_pos, level, particle_engine)
+                    if (
+                        event.type == pygame.KEYDOWN
+                        and event.key == pygame.K_SPACE
+                    ):
+                        return time_delta
+            else:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        exit()
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if event.button == 1:
+                            mouse_pos = pygame.mouse.get_pos()
+                            bombs = detect_collision(mouse_pos, level, particle_engine)
+                            if bombs:
+                                time_delta += 30
 
         level.run()   # Blocks
 
@@ -77,12 +88,16 @@ def mining_game(screen : pygame.Surface, screen_size : Tuple[int,int], time_delt
         pickaxe.update(mouse_x, mouse_y)
         pickaxe.draw(screen)   # Pickaxe
 
-        time_delta = time_delta + time.time() - start_time
-        start_time = time.time()
-        time_elapsed = round(time_delta,3)
-        start_time = time.time()
-        time_text = pygame.font.SysFont('Consolas', 30).render(str(time_elapsed), False, (255, 255, 255))
-        screen.blit(time_text,(screen_size[0]/2,0))
+        if is_bubble:
+            screen.blit(bubble,(screen_size[0]/2-bubble.get_width()/2,screen_size[1]-bubble.get_height()))
+        else :
+            time_delta = time_delta + time.time() - start_time
+            time_elapsed = round(time_delta,3)
+            start_time = time.time()
+            time_text = pygame.font.SysFont('Consolas', 30).render(str(time_elapsed), False, (255, 255, 255))
+            screen.blit(time_text,(screen_size[0]/2,0))
 
+        start_time = time.time()
+        
         pygame.display.update()
         clock.tick(60)

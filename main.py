@@ -203,13 +203,15 @@ while playing:
     display.fill((0,0,0))
     playing_area.show_map(display)
     player.draw(display)
-    time_delta += time.time() - start_time
+    if bubble_index > 3 :
+        time_delta += time.time() - start_time
+        time_elapsed = round(time_delta,3)
+        #display the time elapsed on the top middle of the screen
+        #use Consolas font
+        time_text = consolas.render(str(time_elapsed), False, (255, 255, 255))
+        display.blit(time_text,(display_width/2,0))
+        
     start_time = time.time()
-    time_elapsed = round(time_delta,3)
-    #display the time elapsed on the top middle of the screen
-    #use Consolas font
-    time_text = consolas.render(str(time_elapsed), False, (255, 255, 255))
-    display.blit(time_text,(display_width/2,0))
     
     if bubble_index < 3 :
         display.blit(bubbles[bubble_index],(display_width/2-bubbles[bubble_index].get_width()/2,display_height-bubbles[bubble_index].get_height()))
@@ -217,6 +219,7 @@ while playing:
     pygame.display.update()
     clock.tick(60)
     
+
 time_delta= gemmecatcher(screen_size=(display_width,display_height),screen=display,delta_time=time_delta)
 
 if opencv :
