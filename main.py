@@ -21,10 +21,6 @@ pygame.font.init()
 pygame.display.set_caption('E-Mars')
 
 
-#END
-#clip = VidoeFileClip('.\sfx\END-MARS-TO-EARTH.mpg')
-#clip.preview()
-
 #CREDITS
 #clip = VidoeFileClip('.\sfx\CREDITS.mpg')
 #clip.preview()

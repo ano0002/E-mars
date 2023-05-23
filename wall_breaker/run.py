@@ -86,10 +86,21 @@ def wallbreaker(screen,screen_size, time_delta):
 
     clock: pygame.time.Clock = pygame.time.Clock()
 
+    bubble = pygame.image.load("./set_bubbles/5_mininggame.png")
+    is_bubble = True
     while not event_dispatcher.is_done() and finish.breaked < 5:
-        event_dispatcher.process_event()
-        player.move()
-        ball.move()
+        if is_bubble:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    is_bubble = False
+                    start_time = time.time()
+        else:
+            event_dispatcher.process_event()
+            player.move()
+            ball.move()
         screen.fill(Common.BLACK)
         player.display_on_screen()
         ball.display_on_screen()
@@ -98,8 +109,14 @@ def wallbreaker(screen,screen_size, time_delta):
             brick.display_on_screen()
         if sum([brick.number_remaining_bumps+1 for brick in bricks]) == 0:
              return time_delta + round(time.time() - start_time,3) + score.score
+        if is_bubble:
+            screen.blit(bubble,(screen_size[0]/2-bubble.get_width()/2,screen_size[1]-bubble.get_height()))
+        else :
+            time_elapsed = round(time_delta + time.time() - start_time,3)
+            time_text = pygame.font.SysFont('Consolas', 30).render(str(time_elapsed), False, (255, 255, 255))
+            screen.blit(time_text,(screen_size[0]/2,0))
         pygame.display.flip()
         clock.tick(80)
 
         
-    return time_delta + round(time.time() - start_time,3) + score.score
+    exit()
