@@ -187,8 +187,6 @@ while playing:
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 bubble_index += 1
-                if bubble_index == 3 :
-                    pygame.mouse.set_cursor(*pygame.cursors.arrow)
                 if bubble_index == 2 :
                     pygame.mouse.set_cursor(*pygame.cursors.broken_x)
                 if bubble_index == 1 :

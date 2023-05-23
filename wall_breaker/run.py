@@ -107,7 +107,7 @@ def wallbreaker(screen,screen_size, time_delta):
         for brick in bricks:
             brick.display_on_screen()
         if sum([brick.number_remaining_bumps+1 for brick in bricks]) == 0:
-             return time_delta + round(time.time() - start_time,3) + score.score
+             return time_delta + time.time() - start_time + score.score
         if is_bubble:
             screen.blit(bubble,(screen_size[0]/2-bubble.get_width()/2,screen_size[1]-bubble.get_height()))
         else :
