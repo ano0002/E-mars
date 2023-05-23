@@ -161,6 +161,8 @@ while playing:
             time_delta = mining_game(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
             pygame.mouse.set_cursor(*pygame.cursors.broken_x)
             counter_mining += 1
+            player.power =15
+            player.gun = "assets/shotgun.png"
             music = pygame.mixer.music.load('./music/Vast Surroundings (LOOP).mp3')
             music = pygame.mixer.music.play(-1)
             start_time = time.time()
