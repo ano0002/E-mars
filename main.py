@@ -186,6 +186,8 @@ while playing:
                     time_delta = 0
                     start_time = time.time()
                     bubble_index = 3
+                    counter_mining = 0
+                    counter_wallbreaker = 0
                     player.rect.center = (display_width/2,2*display_height/3)
                     playing_area.offset[1] = 900
                     playing_area.offset[0] = 0
