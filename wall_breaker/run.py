@@ -86,7 +86,7 @@ def wallbreaker(screen,screen_size, time_delta):
 
     clock: pygame.time.Clock = pygame.time.Clock()
 
-    bubble = pygame.image.load("./set_bubbles/5_mininggame.png")
+    bubble = pygame.image.load("./set_bubbles/4_wallbreacker.png")
     is_bubble = True
     while not event_dispatcher.is_done() and finish.breaked < 5:
         if is_bubble:
