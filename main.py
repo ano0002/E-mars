@@ -192,6 +192,11 @@ while playing:
                     playing_area.offset[1] = 900
                     playing_area.offset[0] = 0
                     player.bullet_count = 0
+                    player.power =10
+                    player.gun = "assets/gun.png"
+                    playing_area.map[940][72] = 67
+                    for i in range(701,706):
+                        playing_area.map[i][59] = 37
     else :
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
