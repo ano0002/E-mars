@@ -107,11 +107,11 @@ def wallbreaker(screen,screen_size, time_delta):
         for brick in bricks:
             brick.display_on_screen()
         if sum([brick.number_remaining_bumps+1 for brick in bricks]) == 0:
-             return time_delta + time.time() - start_time + score.score
+             return time_delta + time.time() - start_time
         if is_bubble:
             screen.blit(bubble,(screen_size[0]/2-bubble.get_width()/2,screen_size[1]-bubble.get_height()))
         else :
-            time_elapsed = round(time_delta + time.time() - start_time + score.score,3)
+            time_elapsed = round(time_delta + time.time() - start_time,3)
             time_text = pygame.font.SysFont('Consolas', 30).render(str(time_elapsed), False, (255, 255, 255))
             screen.blit(time_text,(screen_size[0]/2,0))
         pygame.display.flip()
