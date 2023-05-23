@@ -72,6 +72,7 @@ if opencv :
 #set the player to the middle of the screen
 player.rect.center = (display_width/2,2*display_height/3)
 
+player.bullet_count = 0
 
 pygame.mixer.music.set_volume(0.1)
 
