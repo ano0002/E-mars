@@ -26,16 +26,3 @@ class Score(pygame.sprite.Sprite):
         text_surface = self.font.render('Your score: ', False, self.blue)
         score_surface = self.font.render(str(self.score), False, color_score)
         return text_surface, score_surface
-
-    def display_on_screen(self) -> None:
-        text_surface: pygame.Surface = None
-        score_surface: pygame.Surface = None
-
-        text_surface, score_surface = self.get_score_images()
-        whole_width: int = text_surface.get_width() + score_surface.get_width()
-        left_pos_text: int = (self.display.screen_width - whole_width) // 2
-        left_pos_score = left_pos_text + text_surface.get_width()
-        top_pos = (self.height // 2 - max(text_surface.get_height(), score_surface.get_height()))
-
-        self.display.screen.blit(text_surface, (left_pos_text, top_pos))
-        self.display.screen.blit(score_surface, (left_pos_score, top_pos))
