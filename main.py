@@ -158,7 +158,7 @@ while playing:
         pos_y = playing_area.offset[1]*16
         if pos_x > 1100 and pos_x < 1200 and pos_y > 14300 and pos_y < 14700 and counter_mining == 0:
             time_delta = mining_game(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
-            pygame.mouse.set_cursor(*pygame.cursors.arrow)
+            pygame.mouse.set_cursor(*pygame.cursors.broken_x)
             counter_mining += 1
             music = pygame.mixer.music.load('./music/Vast Surroundings (LOOP).mp3')
             music = pygame.mixer.music.play(-1)
@@ -180,6 +180,15 @@ while playing:
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 player.shoot(mouse_pos=pygame.mouse.get_pos())
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    time_delta = 0
+                    start_time = time.time()
+                    bubble_index = 3
+                    player.rect.center = (display_width/2,2*display_height/3)
+                    playing_area.offset[1] = 900
+                    playing_area.offset[0] = 0
+                    player.bullet_count = 0
     else :
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -192,7 +201,7 @@ while playing:
                 if bubble_index == 1 :
                     pygame.mouse.set_cursor(*pygame.cursors.diamond)
                 if bubble_index == 0 :
-                    pygame.mouse.set_cursor(*pygame.cursors.bullseye)
+                    pygame.mouse.set_cursor(*pygame.cursors.arrow)
     player.update(display)
     display.fill((0,0,0))
     playing_area.show_map(display)
