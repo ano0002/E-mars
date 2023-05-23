@@ -152,33 +152,53 @@ counter_wallbreaker = 0
 
 playing = True
 
+bubbles = [pygame.image.load("./set_bubbles/1_outch.png"),pygame.image.load("./set_bubbles/2_rules.png"),pygame.image.load("./set_bubbles/3_maingame.png")]
+
+bubble_index = 0
+
 while playing:
-    pos_x = player.rect.x
-    pos_y = playing_area.offset[1]*16
-    if pos_x > 1100 and pos_x < 1200 and pos_y > 14300 and pos_y < 14700 and counter_mining == 0:
-        time_delta = mining_game(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
-        pygame.mouse.set_cursor(*pygame.cursors.arrow)
-        counter_mining += 1
-        music = pygame.mixer.music.load('./music/Vast Surroundings (LOOP).mp3')
-        music = pygame.mixer.music.play(-1)
-        start_time = time.time()
-    #911 10798
-    if pos_x > 890 and pos_x < 1050 and pos_y > 10770 and pos_y < 10800 and counter_wallbreaker == 0:
-        time_delta = wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
-        counter_wallbreaker += 1
-        for i in range(701,706):
-            playing_area.map[i][59] = 23
-    
-    if pos_x > 800 and pos_y <7850 :
-        playing = False
-        break
-    
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            player.shoot(mouse_pos=pygame.mouse.get_pos())
+    if bubble_index > 3 :
+        pos_x = player.rect.x
+        pos_y = playing_area.offset[1]*16
+        if pos_x > 1100 and pos_x < 1200 and pos_y > 14300 and pos_y < 14700 and counter_mining == 0:
+            time_delta = mining_game(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
+            pygame.mouse.set_cursor(*pygame.cursors.arrow)
+            counter_mining += 1
+            music = pygame.mixer.music.load('./music/Vast Surroundings (LOOP).mp3')
+            music = pygame.mixer.music.play(-1)
+            start_time = time.time()
+        #911 10798
+        if pos_x > 890 and pos_x < 1050 and pos_y > 10770 and pos_y < 10800 and counter_wallbreaker == 0:
+            time_delta = wallbreaker(screen=display,screen_size=(display_width,display_height),time_delta=time_delta)
+            counter_wallbreaker += 1
+            for i in range(701,706):
+                playing_area.map[i][59] = 23
+        
+        if pos_x > 800 and pos_y <7850 :
+            playing = False
+            break
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                player.shoot(mouse_pos=pygame.mouse.get_pos())
+    else :
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                bubble_index += 1
+                if bubble_index == 3 :
+                    pygame.mouse.set_cursor(*pygame.cursors.arrow)
+                if bubble_index == 2 :
+                    pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+                if bubble_index == 1 :
+                    pygame.mouse.set_cursor(*pygame.cursors.diamond)
+                if bubble_index == 0 :
+                    pygame.mouse.set_cursor(*pygame.cursors.bullseye)
     player.update(display)
     display.fill((0,0,0))
     playing_area.show_map(display)
@@ -190,6 +210,9 @@ while playing:
     #use Consolas font
     time_text = consolas.render(str(time_elapsed), False, (255, 255, 255))
     display.blit(time_text,(display_width/2,0))
+    
+    if bubble_index < 3 :
+        display.blit(bubbles[bubble_index],(display_width/2-bubbles[bubble_index].get_width()/2,display_height/2-bubbles[bubble_index].get_height()/2))
     
     pygame.display.update()
     clock.tick(60)
@@ -216,6 +239,6 @@ if opencv :
         display.blit(video_surf, (0, 0))
         pygame.display.update()
         clock.tick(fps)
-        
+pygame.quit()
 print("You have finished the game in",time_delta,"seconds")
 input("Press enter to exit")
