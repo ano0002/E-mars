@@ -163,6 +163,7 @@ while playing:
             counter_mining += 1
             player.power =15
             player.gun = "assets/shotgun.png"
+            playing_area.map[940][72] = 23
             music = pygame.mixer.music.load('./music/Vast Surroundings (LOOP).mp3')
             music = pygame.mixer.music.play(-1)
             start_time = time.time()
