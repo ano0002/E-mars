@@ -1,6 +1,6 @@
 # E-mars
 
-Messrs HORMONE, PREVOTAT, SIMON, SOT and Ms CORDIER offer you a mission: E-MARS.
+Messrs HORMONE, PREVOTAT, SIMON, SOT and Ms CORDIER offer you a mission: E-MARS.<br/>
 <img src="https://github.com/ano0002/E-mars/blob/main/assets/jaquette.png" />
 <br/>
     
